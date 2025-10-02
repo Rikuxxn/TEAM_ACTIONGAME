@@ -43,7 +43,7 @@ public:
 	static CCamera* GetCamera(void) { return m_pCamera; }
 	static CLight* GetLight(void) { return m_pLight; }
 	static CFade* GetFade(void) { return m_pFade; }
-	static btDiscreteDynamicsWorld* GetPhysicsWorld(void) { return m_pDynamicsWorld; }
+	static btDiscreteDynamicsWorld* GetPhysicsWorld(void) { return m_pDynamicsWorld.get(); }
 	int GetFPS(int fps) { return m_fps = fps; };
 	int GetFPSCnt(void) { return m_fps; }
 
@@ -61,11 +61,11 @@ private:
 	static CLight* m_pLight;					// ライトへのポインタ
 	int m_fps;									// FPS値
 
-	btBroadphaseInterface* m_pBroadphase;						// 衝突判定のクラスへのポインタ
-	btDefaultCollisionConfiguration* m_pCollisionConfiguration ;// 衝突検出の設定を管理するクラスへのポインタ
-	btCollisionDispatcher* m_pDispatcher;						// 実際に衝突判定処理を実行するクラスへのポインタ
-	btSequentialImpulseConstraintSolver* m_pSolver;				// 物理シミュレーションの制約ソルバーへのポインタ
-	static btDiscreteDynamicsWorld* m_pDynamicsWorld;			// 物理世界を管理するクラスへのポインタ
+	std::unique_ptr<btBroadphaseInterface> m_pBroadphase;						// 衝突判定のクラスへのポインタ
+	std::unique_ptr<btDefaultCollisionConfiguration> m_pCollisionConfiguration ;// 衝突検出の設定を管理するクラスへのポインタ
+	std::unique_ptr<btCollisionDispatcher> m_pDispatcher;						// 実際に衝突判定処理を実行するクラスへのポインタ
+	std::unique_ptr<btSequentialImpulseConstraintSolver> m_pSolver;				// 物理シミュレーションの制約ソルバーへのポインタ
+	static std::unique_ptr<btDiscreteDynamicsWorld> m_pDynamicsWorld;			// 物理世界を管理するクラスへのポインタ
 
 	static CFade* m_pFade;
 	static CScene* m_pScene;

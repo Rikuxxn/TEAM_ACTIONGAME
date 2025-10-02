@@ -128,7 +128,7 @@ HRESULT CPlayer::Init(void)
 	transform.setOrigin(btVector3(m_colliderPos.x, m_colliderPos.y, m_colliderPos.z));
 
 	// 質量を設定
-	btScalar mass = 1.0f;
+	btScalar mass = 2.0f;
 	btVector3 inertia(0, 0, 0);  // 慣性
 
 	m_pShape->calculateLocalInertia(mass, inertia);
@@ -200,9 +200,6 @@ void CPlayer::Update(void)
 
 	// カメラの角度の取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();
-
-	// カメラモードの取得
-	CCamera::MODE camMode = pCamera->GetMode();
 
 	if (!m_isJumping)
 	{
@@ -602,7 +599,6 @@ InputData CPlayer::GatherInput(void)
 	XINPUT_STATE* pStick = CInputJoypad::GetStickAngle();		// スティックの取得
 	CCamera* pCamera = CManager::GetCamera();					// カメラの取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();						// カメラ角度の取得
-	CCamera::MODE camMode = pCamera->GetMode();					// カメラモードの取得
 
 	// ---------------------------
 	// ジャンプ入力

@@ -8,5 +8,10 @@
     "type": 1,
     "filepath": "data/MODELS/floor_01.x",
     "GUItexFilepath": "data/TEXTURE/floor1.png"
+  },
+  {
+    "type": 2,
+    "filepath": "data/MODELS/seesaw.x",
+    "GUItexFilepath": "data/TEXTURE/seesaw.png"
   }
 ]

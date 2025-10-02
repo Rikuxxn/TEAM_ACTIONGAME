@@ -26,7 +26,10 @@ CCamera* CManager::m_pCamera = nullptr;
 CLight* CManager::m_pLight = nullptr;
 CScene* CManager::m_pScene = nullptr;
 CFade* CManager::m_pFade = nullptr;
-btDiscreteDynamicsWorld* CManager::m_pDynamicsWorld = nullptr;
+std::unique_ptr<btDiscreteDynamicsWorld> CManager::m_pDynamicsWorld = nullptr;
+
+// 名前空間stdの使用
+using namespace std;
 
 //=============================================================================
 // コンストラクタ
@@ -98,15 +101,15 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 	}
 
 	// Bullet物理ワールドの生成
-	m_pBroadphase = new btDbvtBroadphase();
-	m_pCollisionConfiguration = new btDefaultCollisionConfiguration();
-	m_pDispatcher = new btCollisionDispatcher(m_pCollisionConfiguration);
-	m_pSolver = new btSequentialImpulseConstraintSolver();
+	m_pBroadphase = make_unique<btDbvtBroadphase>();
+	m_pCollisionConfiguration = make_unique <btDefaultCollisionConfiguration>();
+	m_pDispatcher = make_unique <btCollisionDispatcher>(m_pCollisionConfiguration.get());
+	m_pSolver = make_unique <btSequentialImpulseConstraintSolver>();
 
-	m_pDynamicsWorld = new btDiscreteDynamicsWorld(m_pDispatcher, m_pBroadphase, m_pSolver, m_pCollisionConfiguration);
+	m_pDynamicsWorld = make_unique <btDiscreteDynamicsWorld>(m_pDispatcher.get(), m_pBroadphase.get(), m_pSolver.get(), m_pCollisionConfiguration.get());
 
 	// 重力を設定
-	m_pDynamicsWorld->setGravity(btVector3(0, -359.8f, 0));
+	m_pDynamicsWorld->setGravity(btVector3(0, -630.0f, 0));
 
 	// カメラの生成
 	m_pCamera = new CCamera;
@@ -231,27 +234,6 @@ void CManager::Uninit(void)
 	{
 		delete m_pLight;
 		m_pLight = nullptr;
-	}
-
-	if (m_pDynamicsWorld)
-	{
-		// 先にワールドから全RigidBodyを外す→delete
-		int num = m_pDynamicsWorld->getNumCollisionObjects();
-		for (int i = num - 1; i >= 0; i--)
-		{
-			btCollisionObject* obj = m_pDynamicsWorld->getCollisionObjectArray()[i];
-			btRigidBody* body = btRigidBody::upcast(obj);
-
-			if (body && body->getMotionState())
-			{
-				delete body->getMotionState();
-				m_pDynamicsWorld->removeCollisionObject(obj);
-				delete obj;
-			}
-		}
-		delete m_pDynamicsWorld;  delete m_pSolver;
-		delete m_pDispatcher;     delete m_pCollisionConfiguration;
-		delete m_pBroadphase;
 	}
 
 	// フェードの破棄
