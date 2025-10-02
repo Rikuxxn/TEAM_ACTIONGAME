@@ -1,0 +1,12 @@
+[
+  {
+    "type": 0,
+    "filepath": "data/MODELS/woodbox_003.x",
+    "GUItexFilepath": "data/TEXTURE/woodbox.png"
+  },
+  {
+    "type": 1,
+    "filepath": "data/MODELS/floor_01.x",
+    "GUItexFilepath": "data/TEXTURE/floor1.png"
+  }
+]
