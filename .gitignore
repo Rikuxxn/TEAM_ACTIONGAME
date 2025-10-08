@@ -31,6 +31,8 @@
 *.la
 *.a
 *.lib
+!bullet3/build_x86/lib/Debug/*.lib
+!bullet3/build_x86/lib/Release/*.lib
 
 # Executables
 *.exe
