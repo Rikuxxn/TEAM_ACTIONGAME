@@ -1,4 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\ZERO_CHECK.vcxproj' does not exist.
+<<<<<<< HEAD
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\examples\BasicDemo\AppBasicExampleGui.vcxproj' does not exist.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\examples\BasicDemo\App_BasicExample.vcxproj' does not exist.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\examples\ExampleBrowser\App_ExampleBrowser.vcxproj' does not exist.
@@ -46,3 +47,13 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\B
   Building Custom Rule C:/Users/student/Desktop/bullet3/CMakeLists.txt
   指定されたパスが見つかりません。
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: 'C:\Users\student\Desktop\bullet3\CMakeLists.txt' のカスタム ビルドがコード 3 で終了しました。
+=======
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\src\BulletCollision\BulletCollision.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\src\BulletDynamics\BulletDynamics.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\student\Desktop\bullet3\build_x86\src\LinearMath\LinearMath.vcxproj' does not exist.
+  Building Custom Rule C:/Users/student/Desktop/bullet3/CMakeLists.txt
+  CMake is re-running because C:/Users/student/Desktop/bullet3/build_x86/CMakeFiles/generate.stamp dependency file is missing.
+CUSTOMBUILD : CMake error : The source directory "C:/Users/student/Desktop/bullet3" does not appear to contain CMakeLists.txt.
+  Specify --help for usage, or press the help button on the CMake GUI.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: 'C:\Users\student\Desktop\bullet3\CMakeLists.txt' のカスタム ビルドがコード 1 で終了しました。
+>>>>>>> bd7c6e06499cbef2c5684284b5884654d804ff93
