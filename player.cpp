@@ -13,6 +13,7 @@
 #include "model.h"
 #include "particle.h"
 #include "game.h"
+#include "guage.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -161,6 +162,9 @@ HRESULT CPlayer::Init(void)
 
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayer_StandState>();
+
+	// ゲージを生成
+	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_GUAGE);
 
 	return S_OK;
 }
