@@ -106,275 +106,6 @@ void CWoodBoxBlock::Set(D3DXVECTOR3 pos)
 
 
 //=============================================================================
-// 岩ブロックのコンストラクタ
-//=============================================================================
-CRockBlock::CRockBlock()
-{
-	// 値のクリア
-	m_pathPoints = {};
-	m_currentTargetIndex = 0;
-	m_speed = 86500.0f;
-	m_isBridgeSwitchOn = false;
-	m_isHit = false;
-	m_isPrevHit = false;
-	m_isThrough = false;
-	m_isPrevThrough = false;
-	m_effectTimer = 0;
-	m_playedRollSoundID = -1;
-	m_dir = INIT_VEC3;
-}
-//=============================================================================
-// 岩ブロックのデストラクタ
-//=============================================================================
-CRockBlock::~CRockBlock()
-{
-	// なし
-}
-//=============================================================================
-// 岩ブロックの更新処理
-//=============================================================================
-void CRockBlock::Update(void)
-{
-	CBlock::Update();	// 共通処理
-
-	if (!CGame::GetPlayer())
-	{
-		return;
-	}
-
-	if (GetPos().y < RESET_HEIGHT)
-	{
-		// リスポーン処理
-		Respawn(D3DXVECTOR3(2815.5f, 670.0f, -1989.0f));
-	}
-
-	CManager::GetCamera()->SetShakeTargetPos(GetPos());// カメラ振動用の対象位置
-
-	if (m_currentTargetIndex < 8)
-	{
-		// カメラシェイクON
-		CManager::GetCamera()->SetCameraShake(true);
-	}
-	else
-	{
-		// カメラシェイクOFF
-		CManager::GetCamera()->SetCameraShake(false);
-	}
-
-	//MoveToTarget();		// チェックポイントへ向けて移動
-
-	//IsPlayerHit();		// プレイヤーとの接触判定
-}
-//=============================================================================
-// リスポーン処理
-//=============================================================================
-void CRockBlock::Respawn(D3DXVECTOR3 resPos)
-{
-	// 動かすためにキネマティックにする
-	SetEditMode(true);
-
-	// リスポーン位置に設定
-	SetPos(resPos);
-	SetRot(D3DXVECTOR3(0, 0, 0));
-
-	// コライダーの更新
-	UpdateCollider();
-
-	// 現在のチェックポイントインデックスをリセットする
-	m_currentTargetIndex = 0;
-
-	// 動的に戻す
-	SetEditMode(false);
-}
-//=============================================================================
-// 通過ポイント追加処理
-//=============================================================================
-void CRockBlock::AddPathPoint(const D3DXVECTOR3& point)
-{
-	m_pathPoints.push_back(point);
-}
-//=============================================================================
-// 目標に向かって移動する処理
-//=============================================================================
-void CRockBlock::MoveToTarget(void)
-{
-	if (m_pathPoints.empty() || m_currentTargetIndex >= (int)m_pathPoints.size())
-	{
-		return;
-	}
-
-	btRigidBody* pRigid = GetRigidBody();
-
-	if (!pRigid)
-	{
-		return;
-	}
-
-	CModelEffect* pModelEffect = nullptr;
-
-	if (m_currentTargetIndex >= 1)
-	{
-		m_effectTimer++;
-
-		if (m_effectTimer >= ROLL_EFFECT_INTERVAL)
-		{// エフェクト発生感覚
-			m_effectTimer = 0;
-
-			// ランダムな角度で横に広がる
-			float angle = ((rand() % 360) / 180.0f) * D3DX_PI;
-			float speed = (rand() % 200) / 30.0f + 0.2f;
-
-			// 移動量
-			D3DXVECTOR3 move;
-			move.x = cosf(angle) * speed;
-			move.z = sinf(angle) * speed;
-			move.y = (rand() % 300) / 50.0f + 0.05f; // 少しだけ上方向
-
-			// 向き
-			D3DXVECTOR3 rot;
-			rot.x = ((rand() % 360) / 180.0f) * D3DX_PI;
-			rot.y = ((rand() % 360) / 180.0f) * D3DX_PI;
-			rot.z = ((rand() % 360) / 180.0f) * D3DX_PI;
-
-			// サイズ
-			D3DXVECTOR3 size;
-			size.x = 0.5f + (rand() % 5) * 0.1f;
-			size.y = 0.5f + (rand() % 5) * 0.1f;
-			size.z = 0.5f + (rand() % 5) * 0.1f;
-
-			// モデルエフェクトの生成
-			pModelEffect = CModelEffect::Create("data/MODELS/effectModel_rock.x", D3DXVECTOR3(GetPos().x, GetPos().y - 200.0f, GetPos().z),
-				rot, move, size, 180, -0.12f, 0.008f);
-		}
-	}
-
-	D3DXVECTOR3 currentPos = GetPos();
-	D3DXVECTOR3 targetPos = m_pathPoints[m_currentTargetIndex];
-
-	// ターゲット方向ベクトル
-	m_dir = targetPos - currentPos;
-	float dist = D3DXVec3Length(&m_dir);
-
-	if (dist < 100.0f)  // ある程度近づいたら次のポイントへ
-	{
-		m_currentTargetIndex++;
-		return;
-	}
-
-	// 正規化
-	D3DXVec3Normalize(&m_dir, &m_dir);
-
-	btVector3 force(0.0f, 0.0f, 0.0f);
-
-	if (m_currentTargetIndex >= 1)
-	{
-		m_isThrough = true;
-	}
-	else
-	{
-		m_isThrough = false;
-	}
-
-	bool isThroughNow = m_isThrough;
-
-	if (isThroughNow && !m_isPrevThrough)
-	{
-		// ループ再生してIDを保存
-		if (m_playedRollSoundID == -1)
-		{
-			m_playedRollSoundID = CManager::GetSound()->Play3D(CSound::SOUND_LABEL_ROLL, currentPos, 850.0f, 1650.0f);
-		}
-	}
-
-	m_isPrevThrough = isThroughNow;
-
-	if (m_currentTargetIndex >= 6)
-	{// インデックスが 6 を超えたら
-
-		float fSpeedDown = 0.001f;
-
-		// 減速させる
-		force = btVector3(m_dir.x * (m_speed * fSpeedDown), 0.0f, m_dir.z * (m_speed * fSpeedDown));
-
-		if (m_currentTargetIndex >= 8 && m_playedRollSoundID != -1)
-		{
-			// 転がる音の停止
-			CManager::GetSound()->Stop(m_playedRollSoundID);
-			m_playedRollSoundID = -1;
-		}
-	}
-	else
-	{// 通常
-		// Z軸中心で転がす
-		force = btVector3(m_dir.x * m_speed, 0.0f, m_dir.z * m_speed);
-	}
-
-	// 音源の位置更新（再生中のみ）
-	if (m_playedRollSoundID != -1)
-	{
-		CManager::GetSound()->UpdateSoundPosition(m_playedRollSoundID, currentPos);
-	}
-
-	// 適用中の速度に加える
-	pRigid->applyCentralForce(force);
-}
-//=============================================================================
-// プレイヤーとの接触判定処理
-//=============================================================================
-void CRockBlock::IsPlayerHit(void)
-{
-	if (CManager::GetMode() != MODE_GAME)
-	{
-		return;
-	}
-
-	CPlayer* pPlayer = CGame::GetPlayer();
-
-	D3DXVECTOR3 playerPos = pPlayer->GetPos();
-	D3DXVECTOR3 rockPos = GetPos();
-
-	float playerRadius = pPlayer->GetRadius();  // プレイヤーの当たり判定半径
-	float rockRadius = 240.0f;					// 岩の半径
-
-	float playerHeight = pPlayer->GetHeight();	// プレイヤーの高さ
-	float rockHeight = 240.0f;					// 岩の高さ範囲
-
-	// XZ距離チェック
-	D3DXVECTOR2 diffXZ = D3DXVECTOR2(playerPos.x - rockPos.x, playerPos.z - rockPos.z);
-
-	float distXZSq = D3DXVec2LengthSq(&diffXZ);
-	float hitDistXZ = playerRadius + rockRadius;
-
-	// Y差チェック
-	float dy = fabsf(playerPos.y - rockPos.y);
-	float hitHeight = (playerHeight * 0.5f) + rockHeight;
-
-	bool isNowHit = m_isHit;
-
-	if (isNowHit && !m_isPrevHit)
-	{
-		// プレイヤーヒットSE
-		CManager::GetSound()->Play(CSound::SOUND_LABEL_HIT);
-	}
-
-	// プレイヤーが当たっていたかを記録
-	m_isPrevHit = isNowHit;
-
-	if (distXZSq < (hitDistXZ * hitDistXZ) && dy < hitHeight)
-	{
-		m_isHit = true;
-
-		// プレイヤーのリスポーン
-		pPlayer->RespawnToCheckpoint(D3DXVECTOR3(2810.0f, 30.0f, -1518.0f));
-	}
-	else
-	{
-		m_isHit = false;
-	}
-}
-
-
-//=============================================================================
 // シーソーブロックのコンストラクタ
 //=============================================================================
 CSeesawBlock::CSeesawBlock()
@@ -472,4 +203,165 @@ void CSeesawBlock::SetHinge(void)
 
 	// ワールドに追加
 	CManager::GetPhysicsWorld()->addConstraint(m_pHinge, true);
+}
+
+
+//=============================================================================
+// ギアブロックのコンストラクタ
+//=============================================================================
+CGearBlock::CGearBlock()
+{
+	// 値のクリア
+}
+//=============================================================================
+// ギアブロックのデストラクタ
+//=============================================================================
+CGearBlock::~CGearBlock()
+{
+	// 無し
+}
+//=============================================================================
+// ギアブロックの更新処理
+//=============================================================================
+void CGearBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+	D3DXVECTOR3 playerPos = CGame::GetPlayer()->GetPos();
+	D3DXVECTOR3 disPos = playerPos - GetPos();
+	float distance = D3DXVec3Length(&disPos);
+	const float kTriggerDistance = 580.0f; // 反応距離
+
+	if (distance < kTriggerDistance)
+	{
+		// 回転
+		D3DXVECTOR3 rot = GetRot();
+
+		rot.y += 0.02f;// 回転スピード
+
+		// 正規化
+		if (rot.y > D3DX_PI)
+		{
+			rot.y -= D3DX_PI * 2.0f;
+		}
+		else if (rot.y <= -D3DX_PI)
+		{
+			rot.y += D3DX_PI * 2.0f;
+		}
+
+		// 向きの設定
+		SetRot(rot);
+	}
+
+}
+
+
+//=============================================================================
+// ギア柱ブロックのコンストラクタ
+//=============================================================================
+CGearPillarBlock::CGearPillarBlock()
+{
+	// 値のクリア
+}
+//=============================================================================
+// ギア柱ブロックのデストラクタ
+//=============================================================================
+CGearPillarBlock::~CGearPillarBlock()
+{
+	// 無し
+}
+//=============================================================================
+// ギア柱ブロックの更新処理
+//=============================================================================
+void CGearPillarBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+}
+
+
+//=============================================================================
+// プレスブロックのコンストラクタ
+//=============================================================================
+CPressBlock::CPressBlock()
+{
+	// 値のクリア
+}
+//=============================================================================
+// プレスブロックのデストラクタ
+//=============================================================================
+CPressBlock::~CPressBlock()
+{
+	// なし
+}
+//=============================================================================
+// プレスブロックの初期化処理
+//=============================================================================
+HRESULT CPressBlock::Init(void)
+{
+	// ブロックの初期化処理
+	CBlock::Init();
+
+	return S_OK;
+}
+//=============================================================================
+// プレスブロックの更新処理
+//=============================================================================
+void CPressBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+}
+
+
+//=============================================================================
+// プロペラボディブロックのコンストラクタ
+//=============================================================================
+CPropellerBodyBlock::CPropellerBodyBlock()
+{
+	// 値のクリア
+}
+//=============================================================================
+// プロペラボディブロックのデストラクタ
+//=============================================================================
+CPropellerBodyBlock::~CPropellerBodyBlock()
+{
+	// なし
+}
+//=============================================================================
+// プロペラボディブロックの更新処理
+//=============================================================================
+void CPropellerBodyBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+}
+
+
+//=============================================================================
+// プロペラ羽ブロックのコンストラクタ
+//=============================================================================
+CPropellerWingBlock::CPropellerWingBlock()
+{
+	// 値のクリア
+}
+//=============================================================================
+// プロペラ羽ブロックのデストラクタ
+//=============================================================================
+CPropellerWingBlock::~CPropellerWingBlock()
+{
+	// なし
+}
+//=============================================================================
+// プロペラ羽ブロックの更新処理
+//=============================================================================
+void CPropellerWingBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
 }
