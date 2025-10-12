@@ -238,7 +238,7 @@ void CGearBlock::Update(void)
 		// ‰ñ“]
 		D3DXVECTOR3 rot = GetRot();
 
-		rot.y += 0.02f;// ‰ñ“]ƒXƒs[ƒh
+		rot.y += 0.008f;// ‰ñ“]ƒXƒs[ƒh
 
 		// ³‹K‰»
 		if (rot.y > D3DX_PI)
