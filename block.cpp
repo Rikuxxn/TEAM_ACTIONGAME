@@ -88,6 +88,7 @@ void CBlock::InitFactory(void)
 
 	m_BlockFactoryMap[CBlock::TYPE_WOODBOX]			= []() -> CBlock* { return new CWoodBoxBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_SEESAW]			= []() -> CBlock* { return new CSeesawBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_PRESS_MAIN]		= []() -> CBlock* { return new CPressBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GEAR_BODY]		= []() -> CBlock* { return new CGearBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_GEAR_PILLAR]		= []() -> CBlock* { return new CGearPillarBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_BODY]	= []() -> CBlock* { return new CPropellerBodyBlock(); };

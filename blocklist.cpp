@@ -288,6 +288,10 @@ void CGearPillarBlock::Update(void)
 CPressBlock::CPressBlock()
 {
 	// 値のクリア
+	m_initPos = INIT_VEC3;		// 初期位置
+	m_offSet = 0.0f;			// オフセットの値
+	m_waitTimer = 0.0f;			// 待機タイマー
+	m_state = STATE::PRESSING;	// 最初は押し出しから開始
 }
 //=============================================================================
 // プレスブロックのデストラクタ
@@ -304,6 +308,9 @@ HRESULT CPressBlock::Init(void)
 	// ブロックの初期化処理
 	CBlock::Init();
 
+	// 初期位置の設定
+	m_initPos = GetPos();
+
 	return S_OK;
 }
 //=============================================================================
@@ -314,6 +321,53 @@ void CPressBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
+	switch (m_state)
+	{
+	case STATE::PRESSING:// 押し出し
+		m_offSet += PRESS_SPEED;
+
+		if (m_offSet >= PRESS_DISTANCE)
+		{
+			m_offSet = PRESS_DISTANCE;
+			m_state = STATE::RETRACTING;
+		}
+		break;
+
+	case STATE::RETRACTING:// 戻り
+		m_offSet -= BACK_SPEED;
+
+		if (m_offSet <= 0.0f)
+		{
+			m_offSet = 0.0f;
+			m_waitTimer = WAIT_TIME;
+			m_state = STATE::IDLE;
+		}
+		break;
+
+	case STATE::IDLE:// 待機
+		if (m_waitTimer > 0.0f)
+		{
+			m_waitTimer -= 1.0f;
+		}
+		else
+		{
+			m_state = STATE::PRESSING;
+		}
+		break;
+	}
+
+	// --- 向きに応じて押し出し方向を決定 ---
+	D3DXVECTOR3 forward(1, 0, 0); // デフォルト（X+方向）
+	D3DXMATRIX rotY;
+	D3DXMatrixRotationY(&rotY, GetRot().y); // Y軸回転
+	D3DXVec3TransformNormal(&forward, &forward, &rotY);
+	D3DXVec3Normalize(&forward, &forward);
+
+	// --- 新しい位置を計算 ---
+	D3DXVECTOR3 newPos = m_initPos + forward * m_offSet;
+
+	// 位置の設定
+	SetPos(newPos);
 }
 
 
