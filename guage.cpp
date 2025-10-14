@@ -86,13 +86,18 @@ void CGuage::Update(void)
 	if (m_type == TYPE_GUAGE)
 	{
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();		// キーボードの取得
-
-		float f = (float)m_nHp / (float)m_nMax;
-		//float f2 = f / 0.1f;
-		//float f3 = f2 + 1;
+		float f, f2, f3, f4;
+		f = (float)m_nHp / (float)m_nMax;
+#if 0
+		f2 = f / 0.1f;
+		f3 = f2;
+#endif
+#if 1
 		int n = f / 0.1f;
-		float f3 = (float)n + 1;
-		float f4 = f3 / 10;
+		f3 = (float)n + 1;
+		//f3 = (float)n;
+#endif
+		f4 = f3 / 10;
 
 #if _DEBUG
 		if (pKeyboard->GetTrigger(DIK_1) == true)
@@ -105,7 +110,7 @@ void CGuage::Update(void)
 			m_nHp -= 50;
 		}
 
-		if (pKeyboard->GetRepeat(DIK_3) == true)
+		if (pKeyboard->GetPress(DIK_3) == true)
 		{
 			if (m_nHp <= m_nMax)
 			{
