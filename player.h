@@ -102,6 +102,7 @@ public:
 	void RespawnToCheckpoint(void);
 	void RespawnToCheckpoint(D3DXVECTOR3 pos);
 	void AddRespawnPoint(const D3DXVECTOR3& pos);
+	CBlock* DetectBlockUnder(void);
 
 	// ステート用にフラグ更新
 	void UpdateMovementFlags(const D3DXVECTOR3& moveDir)
@@ -138,6 +139,8 @@ private:
 	std::vector<D3DXVECTOR3> m_ResPos;	// リスポーン地点
 	int m_particleTimer;				// パーティクルタイマー
 	static constexpr int DASH_PARTICLE_INTERVAL = 10; // パーティクル発生間隔（フレーム数）
+	btTypedConstraint* m_pFloorConstraint;
+	CBlock* m_pGroundBlock;      // 乗っている床
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;
@@ -221,16 +224,12 @@ public:
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
 		// 目標速度計算
-		float moveSpeed = PLAYER_SPEED;
-
 		D3DXVECTOR3 targetMove = input.moveDir;
 
 		if (targetMove.x != 0.0f || targetMove.z != 0.0f)
 		{
 			D3DXVec3Normalize(&targetMove, &targetMove);
-			moveSpeed = PLAYER_SPEED;
-
-			targetMove *= moveSpeed;
+			targetMove *= PLAYER_SPEED;
 		}
 		else
 		{
@@ -313,16 +312,12 @@ public:
 		pPlayer->UpdateMovementFlags(input.moveDir);
 
 		// 目標速度計算
-		float moveSpeed = PLAYER_SPEED;
-
 		D3DXVECTOR3 targetMove = input.moveDir;
 
 		if (targetMove.x != 0.0f || targetMove.z != 0.0f)
 		{
 			D3DXVec3Normalize(&targetMove, &targetMove);
-			moveSpeed = PLAYER_SPEED;
-
-			targetMove *= moveSpeed;
+			targetMove *= PLAYER_SPEED;
 		}
 		else
 		{

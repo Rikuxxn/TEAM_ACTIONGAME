@@ -131,11 +131,28 @@ public:
 	CPressBlock();
 	~CPressBlock();
 
+	// プレス機の状態
+	typedef enum
+	{
+		IDLE = 0,	// 待機
+		PRESSING,	// 押し出し
+		RETRACTING,	// 戻る
+		MAX
+	}STATE;
+
 	HRESULT Init(void);
 	void Update(void);
 
 private:
+	static constexpr float PRESS_DISTANCE	= 180.0f;	// 押し出し距離
+	static constexpr float PRESS_SPEED		= 6.0f;		// 移動スピード
+	static constexpr float BACK_SPEED		= 3.0f;		// 戻りスピード
+	static constexpr float WAIT_TIME		= 60.0f;	// 戻った後の待機時間（フレーム）
 
+	D3DXVECTOR3 m_initPos;	// 初期位置
+	float m_offSet;			// オフセットの値
+	float m_waitTimer;		// 待機タイマー
+	STATE m_state;	// 状態
 };
 
 //*****************************************************************************
