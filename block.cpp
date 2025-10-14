@@ -73,6 +73,7 @@ CBlock* CBlock::Create(const char* pFilepath, D3DXVECTOR3 pos, D3DXVECTOR3 rot, 
 	pBlock->SetType(type);
 	pBlock->SetPath(pFilepath);
 
+	// ‰Šú‰»ˆ—
 	pBlock->Init();
 	pBlock->CreatePhysicsFromScale(size);
 
@@ -93,6 +94,7 @@ void CBlock::InitFactory(void)
 	m_BlockFactoryMap[CBlock::TYPE_GEAR_PILLAR]		= []() -> CBlock* { return new CGearPillarBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_BODY]	= []() -> CBlock* { return new CPropellerBodyBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_WING]	= []() -> CBlock* { return new CPropellerWingBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_BELTCONVEYER]	= []() -> CBlock* { return new CConveyerBlock(); };
 }
 //=============================================================================
 // ‰Šú‰»ˆ—

@@ -7,7 +7,7 @@
   {
     "type": 1,
     "filepath": "data/MODELS/floor_01.x",
-    "GUItexFilepath": "data/TEXTURE/floor1.png"
+    "GUItexFilepath": "data/TEXTURE/floor_01.png"
   },
   {
     "type": 2,
@@ -43,5 +43,15 @@
     "type": 8,
     "filepath": "data/MODELS/propeller_wing.x",
     "GUItexFilepath": "data/TEXTURE/propeller_wing.png"
+  },
+  {
+    "type": 9,
+    "filepath": "data/MODELS/fence_01.x",
+    "GUItexFilepath": "data/TEXTURE/fence_01.png"
+  },
+  {
+    "type": 10,
+    "filepath": "data/MODELS/beltconveyer.x",
+    "GUItexFilepath": "data/TEXTURE/beltconveyer.png"
   }
 ]

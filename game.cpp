@@ -51,7 +51,7 @@ HRESULT CGame::Init(void)
 	m_pBlockManager->Init();
 
 	// ÉvÉåÉCÉÑÅ[ÇÃê∂ê¨
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(0.0f, 100.0f, -300.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(-190.0f, 100.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	//m_pPlayer = CPlayer::Create(D3DXVECTOR3(-660.0f, 100.0f, -3898.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// JSONÇÃì«Ç›çûÇ›
