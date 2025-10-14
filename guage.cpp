@@ -83,8 +83,10 @@ void CGuage::Uninit(void)
 //=============================================================================
 void CGuage::Update(void)
 {
+	static int nCount = 0;
 	if (m_type == TYPE_GUAGE)
 	{
+		nCount++;
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();		// キーボードの取得
 		float f, f2, f3, f4;
 		f = (float)m_nHp / (float)m_nMax;
@@ -97,7 +99,14 @@ void CGuage::Update(void)
 		f3 = (float)n + 1;
 		//f3 = (float)n;
 #endif
-		f4 = f3 / 10;
+		if (m_nHp >= 1)
+		{
+			f4 = f3 / 10;
+		}
+		else
+		{
+			f4 = 0.0f;
+		}
 
 #if _DEBUG
 		if (pKeyboard->GetTrigger(DIK_1) == true)
@@ -123,14 +132,23 @@ void CGuage::Update(void)
 			m_nHp--;
 		}
 
-		// 残りHPに応じて色設定
-		if (m_nHp <= (int)(m_nMax * 0.3f))
-		{// のこりHP30%以下
-			SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
+		// のこりHP20%以上
+		if (m_nHp >= (int)(m_nMax * 0.2f))
+		{
+			float Col = 200.0f * ((float)m_nHp / (float)m_nMax);
+			SetCol(D3DCOLOR_RGBA(255 - (int)Col, (int)Col + 55, 0, 255));
 		}
-		else if (m_nHp > (int)(m_nMax * 0.3f))
-		{// のこりHP30%以上
-			SetCol(D3DCOLOR_RGBA(0, 255, 0, 255));
+		// それ以外
+		else
+		{
+			if (nCount % 2 == 0)
+			{
+				SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
+			}
+			else
+			{
+				SetCol(D3DCOLOR_RGBA(255, 255, 255, 255));
+			}
 		}
 
 		// 2Dオブジェクトの更新処理
