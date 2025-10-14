@@ -268,6 +268,10 @@ void CPlayer::Update(void)
 			deltaRotY += D3DX_PI * 2.0f;
 		}
 
+		// --- 床の回転に合わせてプレイヤーも向きを回転させる ---
+		m_rot.y += deltaRotY;
+		m_rotDest.y += deltaRotY; // 補間先も更新しないと補間で逆戻りする
+
 		D3DXVECTOR3 tangentialVel(0, 0, 0);
 		if (deltaRotY != 0.0f)
 		{
