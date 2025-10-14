@@ -170,6 +170,7 @@
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="FileDialogUtils.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="guage.cpp" />
     <ClCompile Include="guiInfo.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imguimaneger.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="fade.h" />
     <ClInclude Include="FileDialogUtils.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="guage.h" />
     <ClInclude Include="guiInfo.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />

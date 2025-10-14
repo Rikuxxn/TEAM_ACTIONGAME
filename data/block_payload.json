@@ -7,11 +7,51 @@
   {
     "type": 1,
     "filepath": "data/MODELS/floor_01.x",
-    "GUItexFilepath": "data/TEXTURE/floor1.png"
+    "GUItexFilepath": "data/TEXTURE/floor_01.png"
   },
   {
     "type": 2,
     "filepath": "data/MODELS/seesaw.x",
     "GUItexFilepath": "data/TEXTURE/seesaw.png"
+  },
+  {
+    "type": 3,
+    "filepath": "data/MODELS/Press_body.x",
+    "GUItexFilepath": "data/TEXTURE/Press_body.png"
+  },
+  {
+    "type": 4,
+    "filepath": "data/MODELS/Press_main.x",
+    "GUItexFilepath": "data/TEXTURE/Press_main.png"
+  },
+  {
+    "type": 5,
+    "filepath": "data/MODELS/Gear_body.x",
+    "GUItexFilepath": "data/TEXTURE/Gear_body.png"
+  },
+  {
+    "type": 6,
+    "filepath": "data/MODELS/Gear_pillar.x",
+    "GUItexFilepath": "data/TEXTURE/Gear_pillar.png"
+  },
+  {
+    "type": 7,
+    "filepath": "data/MODELS/propeller_body.x",
+    "GUItexFilepath": "data/TEXTURE/propeller_body.png"
+  },
+  {
+    "type": 8,
+    "filepath": "data/MODELS/propeller_wing.x",
+    "GUItexFilepath": "data/TEXTURE/propeller_wing.png"
+  },
+  {
+    "type": 9,
+    "filepath": "data/MODELS/fence_01.x",
+    "GUItexFilepath": "data/TEXTURE/fence_01.png"
+  },
+  {
+    "type": 10,
+    "filepath": "data/MODELS/beltconveyer.x",
+    "GUItexFilepath": "data/TEXTURE/beltconveyer.png"
   }
 ]

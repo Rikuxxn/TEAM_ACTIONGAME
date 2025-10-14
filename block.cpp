@@ -73,6 +73,7 @@ CBlock* CBlock::Create(const char* pFilepath, D3DXVECTOR3 pos, D3DXVECTOR3 rot, 
 	pBlock->SetType(type);
 	pBlock->SetPath(pFilepath);
 
+	// 初期化処理
 	pBlock->Init();
 	pBlock->CreatePhysicsFromScale(size);
 
@@ -88,6 +89,12 @@ void CBlock::InitFactory(void)
 
 	m_BlockFactoryMap[CBlock::TYPE_WOODBOX]			= []() -> CBlock* { return new CWoodBoxBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_SEESAW]			= []() -> CBlock* { return new CSeesawBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_PRESS_MAIN]		= []() -> CBlock* { return new CPressBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GEAR_BODY]		= []() -> CBlock* { return new CGearBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_GEAR_PILLAR]		= []() -> CBlock* { return new CGearPillarBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_BODY]	= []() -> CBlock* { return new CPropellerBodyBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_WING]	= []() -> CBlock* { return new CPropellerWingBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_BELTCONVEYER]	= []() -> CBlock* { return new CConveyerBlock(); };
 }
 //=============================================================================
 // 初期化処理
@@ -182,7 +189,7 @@ void CBlock::Update(void)
 		sy = std::max(-1.0f, std::min(1.0f, sy));
 		euler.x = asinf(sy);  // pitch (X)
 
-		// cos(pitch) が0に近いとジンバルロックなので、その回避処理
+		// cos(pitch) が0に近いとジンバルロックなので、回避処理
 		if (fabsf(cosf(euler.x)) > 1e-4f)
 		{
 			euler.y = atan2f(matRot._31, matRot._33);  // yaw (Y)
@@ -227,6 +234,9 @@ void CBlock::Update(void)
 		// セット
 		SetRot(euler);
 	}
+
+	// Xオブジェクトの更新処理
+	CObjectX::Update();
 }
 //=============================================================================
 // コライダーの更新処理

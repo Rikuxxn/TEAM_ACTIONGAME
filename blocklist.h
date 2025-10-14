@@ -28,54 +28,11 @@ public:
 
 	bool IsDynamicBlock(void) const override { return true; }
 	btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
-	btScalar GetMass(void) const { return 4.0f; }  // 質量の取得
+	btScalar GetMass(void) const { return 8.0f; }  // 質量の取得
 
 private:
-	static constexpr float RESPAWN_HEIGHT = -810.0f;
+	static constexpr float RESPAWN_HEIGHT = -300.0f;
 	D3DXVECTOR3 m_ResPos;	// リスポーン位置
-};
-
-
-//*****************************************************************************
-// 岩ブロッククラス
-//*****************************************************************************
-class CRockBlock : public CBlock
-{
-public:
-	CRockBlock();
-	~CRockBlock();
-
-	void Update(void);
-	void Respawn(D3DXVECTOR3 resPos) override;
-	void AddPathPoint(const D3DXVECTOR3& point);// チェックポイント追加 (通常時用)
-	void MoveToTarget(void);					// 転がし処理
-	void IsPlayerHit(void);						// プレイヤーとの接触判定
-	D3DXVECTOR3 GetVelocity(void) override { return m_dir; }
-
-	// コライダー
-	btCollisionShape* CreateCollisionShape(const D3DXVECTOR3& size) override
-	{
-		float radius = std::max({ size.x, size.y, size.z }) * 0.5f;
-		return new btSphereShape(radius);
-	}
-	btVector3 GetAngularFactor(void) const { return btVector3(1.0f, 1.0f, 1.0f); }
-	bool IsDynamicBlock(void) const override { return true; }
-	btScalar GetMass(void) const { return 100.0f; }  // 質量の取得
-
-private:
-	static constexpr float RESET_HEIGHT = -480.0f;// リスポーンする高さ
-	std::vector<D3DXVECTOR3> m_pathPoints;		// チェックポイントの配列 (代入用)
-	int m_currentTargetIndex;					// 今の目標地点インデックス
-	float m_speed;								// 力の強さ（速度の代わり）
-	bool m_isBridgeSwitchOn;
-	bool m_isHit;
-	bool m_isPrevHit;
-	bool m_isThrough;							// 通過したか
-	bool m_isPrevThrough;						// 直前に通過したか
-	int m_effectTimer;							// タイマー
-	const int ROLL_EFFECT_INTERVAL = 5;			// エフェクト発生間隔（フレーム数）
-	int m_playedRollSoundID;					// 再生中の音ID
-	D3DXVECTOR3 m_dir;							// 岩の進行方向ベクトル
 };
 
 //*****************************************************************************
@@ -113,6 +70,144 @@ public:
 
 private:
 	btHingeConstraint* m_pHinge;
+};
+
+//*****************************************************************************
+// ギアブロッククラス
+//*****************************************************************************
+class CGearBlock : public CBlock
+{
+public:
+	CGearBlock();
+	~CGearBlock();
+
+	void Update(void);
+
+	// コライダー
+	btCollisionShape* CreateCollisionShape(const D3DXVECTOR3& size) override
+	{
+		// half extents（半径と高さの半分）
+		btVector3 halfExtents(size.x * 0.5f, size.y * 0.5f, size.x * 0.5f);
+
+		// Y軸方向の円柱
+		return new btCylinderShape(halfExtents);
+	}
+
+private:
+
+};
+
+//*****************************************************************************
+// ギア柱ブロッククラス
+//*****************************************************************************
+class CGearPillarBlock : public CBlock
+{
+public:
+	CGearPillarBlock();
+	~CGearPillarBlock();
+
+	void Update(void);
+
+	// コライダー
+	btCollisionShape* CreateCollisionShape(const D3DXVECTOR3& size) override
+	{
+		// half extents（半径と高さの半分）
+		btVector3 halfExtents(size.x * 0.5f, size.y * 0.5f, size.x * 0.5f);
+
+		// Y軸方向の円柱
+		return new btCylinderShape(halfExtents);
+	}
+
+private:
+
+};
+
+//*****************************************************************************
+// プレスブロッククラス
+//*****************************************************************************
+class CPressBlock : public CBlock
+{
+public:
+	CPressBlock();
+	~CPressBlock();
+
+	// プレス機の状態
+	typedef enum
+	{
+		IDLE = 0,	// 待機
+		PRESSING,	// 押し出し
+		RETRACTING,	// 戻る
+		MAX
+	}STATE;
+
+	HRESULT Init(void);
+	void Update(void);
+
+private:
+	static constexpr float PRESS_DISTANCE	= 180.0f;	// 押し出し距離
+	static constexpr float PRESS_SPEED		= 6.0f;		// 移動スピード
+	static constexpr float BACK_SPEED		= 3.0f;		// 戻りスピード
+	static constexpr float WAIT_TIME		= 60.0f;	// 戻った後の待機時間（フレーム）
+
+	D3DXVECTOR3 m_initPos;	// 初期位置
+	float m_offSet;			// オフセットの値
+	float m_waitTimer;		// 待機タイマー
+	STATE m_state;	// 状態
+};
+
+//*****************************************************************************
+// プロペラボディブロッククラス
+//*****************************************************************************
+class CPropellerBodyBlock : public CBlock
+{
+public:
+	CPropellerBodyBlock();
+	~CPropellerBodyBlock();
+
+	void Update(void);
+
+	// コライダー
+	btCollisionShape* CreateCollisionShape(const D3DXVECTOR3& size) override
+	{
+		// half extents（半径と高さの半分）
+		btVector3 halfExtents(size.x * 0.5f, size.x * 0.5f, size.y * 0.2f);
+
+		// Y軸方向の円柱
+		return new btCylinderShapeZ(halfExtents);
+	}
+
+private:
+
+};
+
+//*****************************************************************************
+// プロペラブロッククラス
+//*****************************************************************************
+class CPropellerWingBlock : public CBlock
+{
+public:
+	CPropellerWingBlock();
+	~CPropellerWingBlock();
+
+	void Update(void);
+
+private:
+
+};
+
+//*****************************************************************************
+// ベルトコンベアブロッククラス
+//*****************************************************************************
+class CConveyerBlock : public CBlock
+{
+public:
+	CConveyerBlock();
+	~CConveyerBlock();
+
+	void Update();
+
+private:
+
 };
 
 #endif

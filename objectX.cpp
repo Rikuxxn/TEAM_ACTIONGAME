@@ -25,6 +25,8 @@ CObjectX::CObjectX(int nPriority) : CObject(nPriority)
 	m_nIdxTexture	= 0;					// テクスチャインデックス
 	m_pos			= INIT_VEC3;			// 位置
 	m_rot			= INIT_VEC3;			// 向き
+	m_prevPos		= INIT_VEC3;			// 直前の位置
+	m_prevRot		= INIT_VEC3;			// 直前の向き
 	m_move			= INIT_VEC3;			// 移動量
 	m_size			= D3DXVECTOR3(1.0f, 1.0f, 1.0f);// サイズ : 初期は1.0にしておく
 	m_pMesh			= nullptr;				// メッシュへのポインタ
@@ -188,8 +190,9 @@ void CObjectX::Uninit(void)
 //=============================================================================
 void CObjectX::Update(void)
 {
-
-	
+	// 次のフレームに備えて保存
+	m_prevPos = m_pos;
+	m_prevRot = m_rot;
 }
 //=============================================================================
 // 描画処理

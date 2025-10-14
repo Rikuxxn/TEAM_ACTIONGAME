@@ -1,2 +1,6 @@
 PlatformToolSet=v142:VCToolArchitecture=Native64Bit:VCToolsVersion=14.29.30133:TargetPlatformVersion=10.0.19041.0:
+<<<<<<< HEAD
+Debug|Win32|C:\Users\student\OneDrive - yoshida-g.ac.jp\デスクトップ\Discharge!\TEAM_ACTIONGAME\bullet3\build_x86\|
+=======
 Debug|Win32|C:\Users\student\Desktop\TEAM_ACTIONGAME\TEAM_ACTIONGAME\bullet3\build_x86\|
+>>>>>>> bd7c6e06499cbef2c5684284b5884654d804ff93

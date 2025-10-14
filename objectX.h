@@ -35,6 +35,8 @@ public:
 	const char* GetPath(void) { return m_szPath; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 GetPrevPos(void) const { return m_prevPos; }
+	D3DXVECTOR3 GetPrevRot(void)  const { return m_prevRot; }
 	D3DXVECTOR3 GetSize(void) const { return m_size; }		// 拡大率
 	D3DXVECTOR3 GetModelSize(void) { return m_modelSize; }	// モデルの元サイズ
 	virtual D3DXCOLOR GetCol(void) const { return D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f); }
@@ -44,6 +46,8 @@ private:
 	int* m_nIdxTexture;
 	D3DXVECTOR3 m_pos;					// 位置
 	D3DXVECTOR3 m_rot;					// 向き
+	D3DXVECTOR3 m_prevPos;				// 直前の位置
+	D3DXVECTOR3 m_prevRot;				// 直前の向き
 	D3DXVECTOR3 m_move;					// 移動量
 	D3DXVECTOR3 m_size;					// サイズ
 	LPD3DXMESH m_pMesh;					// メッシュへのポインタ

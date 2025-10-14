@@ -13,6 +13,7 @@
 #include "model.h"
 #include "particle.h"
 #include "game.h"
+#include "guage.h"
 
 // 名前空間stdの使用
 using namespace std;
@@ -49,10 +50,10 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_jumpFrame			= 0;							// ジャンプしてから何フレーム経過したか
 	m_pCarryingBlock	= nullptr;						// 運んでいるブロック
 	m_particleTimer		= 0;							// パーティクルタイマー
-	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
-	{
-		m_apModel[nCnt] = {};							// モデル(パーツ)へのポインタ
-	}
+	m_pFloorConstraint	= nullptr;						// 固定ジョイント
+	m_pGroundBlock		= nullptr;						// 乗っている床
+	memset(m_apModel, 0, sizeof(m_apModel));			// モデル(パーツ)へのポインタ
+
 }
 //=============================================================================
 // デストラクタ
@@ -162,6 +163,10 @@ HRESULT CPlayer::Init(void)
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayer_StandState>();
 
+	// ゲージを生成
+	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_GUAGE);
+	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_FRAME);
+
 	return S_OK;
 }
 //=============================================================================
@@ -201,9 +206,9 @@ void CPlayer::Update(void)
 	// カメラの角度の取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();
 
+	// --- 接地判定 ---
 	if (!m_isJumping)
 	{
-		// 接地判定
 		m_bOnGround = OnGround(CManager::GetPhysicsWorld(), m_pRigidBody, 55.0f);
 	}
 
@@ -238,6 +243,55 @@ void CPlayer::Update(void)
 	m_colliderPos = D3DXVECTOR3(pos.getX(), pos.getY(), pos.getZ());
 	m_pos = m_colliderPos - D3DXVECTOR3(0, 50.0f, 0); // 足元へのオフセット
 
+	// ===============================================
+	// 動く床・回転床対応
+	// ===============================================
+	CBlock* pBlock = DetectBlockUnder();
+	D3DXVECTOR3 floorMove(0.0f, 0.0f, 0.0f);
+
+	float dt = 1.0f / 60.0f;
+
+	if (pBlock && !m_isJumping)
+	{
+		// --- 床平行移動の差分 ---
+		D3DXVECTOR3 deltaPos = pBlock->GetPos() - pBlock->GetPrevPos();
+
+		// --- 床回転の接線速度 ---
+		D3DXVECTOR3 relPos = m_pos - pBlock->GetPos(); // 床中心からの相対位置
+		float deltaRotY = pBlock->GetRot().y - pBlock->GetPrevRot().y;
+
+		// 正規化
+		if (deltaRotY > D3DX_PI)
+		{
+			deltaRotY -= D3DX_PI * 2.0f;
+		}
+		if (deltaRotY < -D3DX_PI)
+		{
+			deltaRotY += D3DX_PI * 2.0f;
+		}
+
+		D3DXVECTOR3 tangentialVel(0, 0, 0);
+		if (deltaRotY != 0.0f)
+		{
+			tangentialVel.x = -relPos.z * deltaRotY;
+			tangentialVel.z = relPos.x * deltaRotY;
+		}
+
+		// 最終的な床追従量
+		floorMove = (deltaPos - tangentialVel) / dt;
+	}
+	else
+	{
+		floorMove = D3DXVECTOR3(0, 0, 0);
+	}
+
+	// X/Zの速度はステートマシン入力だけで制御
+	btVector3 vel = m_pRigidBody->getLinearVelocity();
+	vel.setX(m_move.x + floorMove.x);
+	vel.setZ(m_move.z + floorMove.z);
+	m_pRigidBody->setLinearVelocity(vel);
+
+	// モデルエフェクト
 	CModelEffect* pModelEffect = nullptr;
 
 	if (m_bIsMoving && !m_isJumping && m_bOnGround)
@@ -664,5 +718,26 @@ InputData CPlayer::GatherInput(void)
 	}
 
 	return input;
+}
+//=============================================================================
+// 下にあるブロックを調べる関数
+//=============================================================================
+CBlock* CPlayer::DetectBlockUnder(void)
+{
+	btDiscreteDynamicsWorld* world = CManager::GetPhysicsWorld();
+	btVector3 from(m_pos.x, m_pos.y + 10.0f, m_pos.z);
+	btVector3 to(m_pos.x, m_pos.y - 5.0f, m_pos.z);
+
+	btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
+	world->rayTest(from, to, rayCallback);
+
+	if (rayCallback.hasHit())
+	{
+		CBlock* pBlock = reinterpret_cast<CBlock*>(
+			rayCallback.m_collisionObject->getUserPointer());
+		return pBlock;
+	}
+
+	return nullptr;
 }
 
