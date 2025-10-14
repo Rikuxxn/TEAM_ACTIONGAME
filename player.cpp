@@ -163,8 +163,9 @@ HRESULT CPlayer::Init(void)
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayer_StandState>();
 
-	//// ゲージを生成
-	//CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_GUAGE);
+	// ゲージを生成
+	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_GUAGE);
+	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_FRAME);
 
 	return S_OK;
 }

@@ -45,6 +45,9 @@ public:
 	void TextureAnim(int nTexPosX, int nTexPosY, int nAnimSpeed);
 	void ScrollTexture(void);
 
+	void UpdateUI(float fWidth);
+	void UpdateFrame(void);
+
 private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;		// 頂点バッファへのポインタ
 	D3DXVECTOR3 m_pos;						// 位置
