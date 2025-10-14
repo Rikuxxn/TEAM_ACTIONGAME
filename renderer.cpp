@@ -34,7 +34,7 @@ CRenderer::CRenderer()
 	m_ResizeWidth	= 0;
 	m_ResizeHeight	= 0;
 	m_d3dpp			= {};
-	m_bgCol			= INIT_XCOL;
+	m_bgCol			= D3DXCOLOR(0.6f, 0.45f, 0.15f, 1.0f);
 }
 //=============================================================================
 // デストラクタ

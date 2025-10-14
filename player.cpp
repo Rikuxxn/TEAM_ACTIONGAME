@@ -73,10 +73,8 @@ CPlayer* CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	pPlayer->m_rot = D3DXToRadian(rot);
 
 	// リスポーン位置の設定
-	pPlayer->AddRespawnPoint(D3DXVECTOR3(427.0f, 30.0f, 1110.0f));
-	pPlayer->AddRespawnPoint(D3DXVECTOR3(-1327.0f, 30.0f, -4586.0f));
-	pPlayer->AddRespawnPoint(D3DXVECTOR3(2810.0f, 30.0f, -1518.0f));
-	pPlayer->AddRespawnPoint(D3DXVECTOR3(-1380.0f, 30.0f, -6861.7f));
+	pPlayer->AddRespawnPoint(D3DXVECTOR3(70.0f, 30.0f, -100.0f));
+	pPlayer->AddRespawnPoint(D3DXVECTOR3(665.0f, 30.0f, -100.0f));
 
 	// 初期化処理
 	pPlayer->Init();
