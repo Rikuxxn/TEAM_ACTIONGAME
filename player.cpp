@@ -162,8 +162,8 @@ HRESULT CPlayer::Init(void)
 	m_stateMachine.ChangeState<CPlayer_StandState>();
 
 	// ÉQÅ[ÉWÇê∂ê¨
-	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_GUAGE);
-	CGuage::Create(D3DXVECTOR3(100.0f, 100.0f, 0.0f), CGuage::TYPE_FRAME);
+	CGuage::Create(D3DXVECTOR3(700.0f, 130.0f, 0.0f), CGuage::TYPE_GUAGE);
+	CGuage::Create(D3DXVECTOR3(700.0f, 130.0f, 0.0f), CGuage::TYPE_FRAME);
 
 	return S_OK;
 }

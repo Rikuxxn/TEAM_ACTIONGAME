@@ -46,7 +46,14 @@ CGuage* CGuage::Create(D3DXVECTOR3 pos, GUAGETYPE type)
 	// 初期化処理
 	pGuage->SetPos(pos);
 	pGuage->SetSize(m_fWidth, m_fHeight);
-	pGuage->SetCol(D3DCOLOR_RGBA(0, 255, 0, 255));
+	if (type == TYPE_GUAGE)
+	{
+		pGuage->SetCol(D3DCOLOR_RGBA(0, 255, 0, 255));
+	}
+	if (type == TYPE_FRAME)
+	{
+		pGuage->SetCol(D3DCOLOR_RGBA(255, 255, 255, 255));
+	}
 	pGuage->m_type = type;
 	pGuage->Init();
 
@@ -121,7 +128,7 @@ void CGuage::Update(void)
 
 		if (pKeyboard->GetPress(DIK_3) == true)
 		{
-			if (m_nHp <= m_nMax)
+			if (m_nHp < m_nMax - 10)
 			{
 				m_nHp += 3;
 			}
@@ -132,32 +139,43 @@ void CGuage::Update(void)
 			m_nHp--;
 		}
 
-		// のこりHP20%以上
-		if (m_nHp >= (int)(m_nMax * 0.2f))
+		// のこりHP30%以上
+		if (m_nHp >= (int)(m_nMax * 0.3f))
 		{
-			float Col = 200.0f * ((float)m_nHp / (float)m_nMax);
-			SetCol(D3DCOLOR_RGBA(255 - (int)Col, (int)Col + 55, 0, 255));
+			SetCol(D3DCOLOR_RGBA(0, 255, 0, 255));
 		}
 		// それ以外
 		else
 		{
-			if (nCount % 2 == 0)
-			{
-				SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
-			}
-			else
-			{
-				SetCol(D3DCOLOR_RGBA(255, 255, 255, 255));
-			}
+			SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
 		}
 
+		//// のこりHP20%以上
+		//if (m_nHp >= (int)(m_nMax * 0.2f))
+		//{
+		//	float Col = 200.0f * ((float)m_nHp / (float)m_nMax);
+		//	SetCol(D3DCOLOR_RGBA(255 - (int)Col, (int)Col + 55, 0, 255));
+		//}
+		//// それ以外
+		//else
+		//{
+		//	if (nCount % 2 == 0)
+		//	{
+		//		SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
+		//	}
+		//	else
+		//	{
+		//		SetCol(D3DCOLOR_RGBA(255, 255, 255, 255));
+		//	}
+		//}
+
 		// 2Dオブジェクトの更新処理
-		CObject2D::UpdateUI(f4);
+		CObject2D::UpdateUI(f4, 52.0f);
 	}
 	else if (m_type == TYPE_FRAME)
 	{
 		// 2Dオブジェクトの更新処理
-		CObject2D::UpdateFrame();
+		CObject2D::UpdateFrame(52.0f);
 	}
 }
 //=============================================================================
