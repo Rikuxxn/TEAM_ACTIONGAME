@@ -441,6 +441,33 @@ void CMotion::Update(CModel** pModel, int& nNumModel)
 			Mrot.y = m_aMotionInfo[m_motionType].aKeyInfo[nNextKey].aKey[nCntModel].fRotY - m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCntModel].fRotY;
 			Mrot.z = m_aMotionInfo[m_motionType].aKeyInfo[nNextKey].aKey[nCntModel].fRotZ - m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].aKey[nCntModel].fRotZ;
 
+			if (Mrot.x > D3DX_PI)
+			{
+				Mrot.x -= D3DX_PI * 2.0f;
+			}
+			else if (Mrot.x < -D3DX_PI)
+			{
+				Mrot.x += D3DX_PI * 2.0f;
+			}
+
+			if (Mrot.y > D3DX_PI)
+			{
+				Mrot.y -= D3DX_PI * 2.0f;
+			}
+			else if (Mrot.y < -D3DX_PI)
+			{
+				Mrot.y += D3DX_PI * 2.0f;
+			}
+
+			if (Mrot.z > D3DX_PI)
+			{
+				Mrot.z -= D3DX_PI * 2.0f;
+			}
+			else if (Mrot.z < -D3DX_PI)
+			{
+				Mrot.z += D3DX_PI * 2.0f;
+			}
+
 			// •âŠÔŒW”‚ðŒvŽZ
 			float t = (float)m_nCounterMotion / m_aMotionInfo[m_motionType].aKeyInfo[m_nKey].nFrame;
 
