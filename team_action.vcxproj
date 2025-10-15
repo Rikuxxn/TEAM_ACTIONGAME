@@ -213,6 +213,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="score.cpp" />
     <ClCompile Include="shadowS.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="score.h" />
     <ClInclude Include="shadowS.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="state.h" />
