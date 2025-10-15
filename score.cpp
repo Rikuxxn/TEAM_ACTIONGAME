@@ -17,6 +17,7 @@
 // 静的メンバ変数宣言
 //*****************************************************************************
 int CScore::m_nScore = 0;
+int CScore::m_nDig[MAX_DIGITS] = {};
 
 //=============================================================================
 // コンストラクタ
@@ -107,6 +108,26 @@ void CScore::Uninit(void)
 //=============================================================================
 void CScore::Update(void)
 {
+	// HPの各桁の数字を抽出
+	for (int nCount = 0; nCount < MAX_DIGITS; nCount++)
+	{
+		m_nDig[nCount] = NULL;
+	}
+
+	int nHP = m_nScore;
+	for (int nCount = 0; nCount < MAX_DIGITS; nCount++)
+	{
+		int Idx = MAX_DIGITS - 1 - nCount;
+		if (Idx >= 0 && Idx < MAX_DIGITS)
+		{
+			m_nDig[Idx] = nHP % 10;
+			if (nHP != 0)
+			{
+				nHP /= 10;
+			}
+		}
+	}
+
 	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
 		if (m_apNumber[nCnt])
@@ -123,30 +144,60 @@ void CScore::Draw(void)
 {
 	int score = m_nScore;
 
-	// スコアを各桁に分解（右から）
-	for (int nCnt = MAX_DIGITS - 1; nCnt >= 0; nCnt--)
+	bool bDraw = false;
+
+	for (int nCnt = 0; nCnt < MAX_DIGITS; nCnt++)
 	{
-		int digit = score % 10;
-		score /= 10;
+		int digit = m_nDig[nCnt];
 
-		if (m_apNumber[nCnt])
+		if (digit != 0 || nCnt == MAX_DIGITS - 1 || bDraw)
 		{
-			// 桁設定処理
-			m_apNumber[nCnt]->SetDigit(digit);
+			bDraw = true;
 
-			// テクスチャの取得
-			CTexture* pTexture = CManager::GetTexture();
+			if (m_apNumber[nCnt])
+			{
+				// 桁設定処理
+				m_apNumber[nCnt]->SetDigit(digit);
 
-			// デバイスの取得
-			CRenderer* renderer = CManager::GetRenderer();
-			LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+				// テクスチャの取得
+				CTexture* pTexture = CManager::GetTexture();
 
-			// テクスチャの設定
-			pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
+				// デバイスの取得
+				CRenderer* renderer = CManager::GetRenderer();
+				LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
 
-			m_apNumber[nCnt]->Draw();
+				// テクスチャの設定
+				pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
+
+				m_apNumber[nCnt]->Draw();
+			}
 		}
 	}
+
+	//// スコアを各桁に分解（右から）
+	//for (int nCnt = MAX_DIGITS - 1; nCnt >= 0; nCnt--)
+	//{
+	//	int digit = score % 10;
+	//	score /= 10;
+
+	//	if (m_apNumber[nCnt])
+	//	{
+	//		// 桁設定処理
+	//		m_apNumber[nCnt]->SetDigit(digit);
+
+	//		// テクスチャの取得
+	//		CTexture* pTexture = CManager::GetTexture();
+
+	//		// デバイスの取得
+	//		CRenderer* renderer = CManager::GetRenderer();
+	//		LPDIRECT3DDEVICE9 pDevice = renderer->GetDevice();
+
+	//		// テクスチャの設定
+	//		pDevice->SetTexture(0, pTexture->GetAddress(m_nIdxTexture));
+
+	//		m_apNumber[nCnt]->Draw();
+	//	}
+	//}
 }
 //=============================================================================
 // 位置の取得
@@ -169,10 +220,10 @@ void CScore::AddScore(int nValue)
 {
 	m_nScore += nValue;
 
-	if (m_nScore > 99999999)
+	if (m_nScore > 999)
 	{
 		// 8桁制限
-		m_nScore = 99999999;
+		m_nScore = 999;
 	}
 }
 //=============================================================================

@@ -53,5 +53,10 @@
     "type": 10,
     "filepath": "data/MODELS/beltconveyer.x",
     "GUItexFilepath": "data/TEXTURE/beltconveyer.png"
+  },
+  {
+    "type": 11,
+    "filepath": "data/MODELS/move_floor.x",
+    "GUItexFilepath": "data/TEXTURE/move_floor.png"
   }
 ]
