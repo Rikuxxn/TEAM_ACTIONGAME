@@ -10,6 +10,7 @@
 //*****************************************************************************
 #include "guage.h"
 #include "manager.h"
+#include "score.h"
 
 //*****************************************************************************
 // Ã“Iƒƒ“ƒo•Ï”éŒ¾
@@ -149,6 +150,8 @@ void CGuage::Update(void)
 		{
 			SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
 		}
+
+		CScore::SetScore((int)(((float)m_nHp / (float)m_nMax) * 100));
 
 		//// ‚Ì‚±‚èHP20%ˆÈã
 		//if (m_nHp >= (int)(m_nMax * 0.2f))

@@ -12,6 +12,7 @@
 #include "manager.h"
 #include "result.h"
 #include "particle.h"
+#include "score.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -66,6 +67,9 @@ HRESULT CGame::Init(void)
 
 	// コロンの生成
 	m_pColon = CColon::Create(D3DXVECTOR3(fTimePosX + 2 * fTimeWidth, 10.0f, 0.0f), fTimeWidth / 2, fTimeHeight);
+
+	// スコアの生成
+	CScore::Create(620.0f, 50.0f, 80.0f, 100.0f);
 
 	//// ポーズUIの生成
 	//m_pUi = CUi::Create<CPauseUi>("data/TEXTURE/ui_pause.png",D3DXVECTOR3(210.0f, 855.0f, 0.0f), 160.0f, 35.0f);

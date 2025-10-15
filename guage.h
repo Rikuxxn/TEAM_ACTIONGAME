@@ -40,7 +40,7 @@ private:
 	GUAGETYPE m_type;							// ゲージの種類
 	static constexpr float m_fWidth = 470.0f;	// 横幅
 	static constexpr float m_fHeight = 65.0f;	// 縦幅
-	static constexpr int m_nMax = 1000;			// 最大値
+	static constexpr int m_nMax = 600;			// 最大値
 	static int m_nIdxTexture;					// テクスチャインデックス
 	int m_nHp;									// HP
 	int m_nFrame;

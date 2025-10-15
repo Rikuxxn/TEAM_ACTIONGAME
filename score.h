@@ -29,12 +29,12 @@ public:
 	void Update(void);
 	void Draw(void);
 	D3DXVECTOR3 GetPos(void);
-	void SetScore(int nScore);
+	static void SetScore(int nScore);
 	static void AddScore(int nValue);
 	int DigitNum(int nScore);
 
 private:
-	static const int MAX_DIGITS = 8;		// 桁数
+	static const int MAX_DIGITS = 3;		// 桁数
 	CNumber* m_apNumber[MAX_DIGITS];		// 各桁の数字表示用
 	static int m_nScore;					// スコア
 	float m_digitWidth;						// 数字1桁あたりの幅
