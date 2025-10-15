@@ -321,53 +321,53 @@ void CPressBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
-	switch (m_state)
-	{
-	case STATE::PRESSING:// 押し出し
-		m_offSet += PRESS_SPEED;
+	//switch (m_state)
+	//{
+	//case STATE::PRESSING:// 押し出し
+	//	m_offSet += PRESS_SPEED;
 
-		if (m_offSet >= PRESS_DISTANCE)
-		{
-			m_offSet = PRESS_DISTANCE;
-			m_state = STATE::RETRACTING;
-		}
-		break;
+	//	if (m_offSet >= PRESS_DISTANCE)
+	//	{
+	//		m_offSet = PRESS_DISTANCE;
+	//		m_state = STATE::RETRACTING;
+	//	}
+	//	break;
 
-	case STATE::RETRACTING:// 戻り
-		m_offSet -= BACK_SPEED;
+	//case STATE::RETRACTING:// 戻り
+	//	m_offSet -= BACK_SPEED;
 
-		if (m_offSet <= 0.0f)
-		{
-			m_offSet = 0.0f;
-			m_waitTimer = WAIT_TIME;
-			m_state = STATE::IDLE;
-		}
-		break;
+	//	if (m_offSet <= 0.0f)
+	//	{
+	//		m_offSet = 0.0f;
+	//		m_waitTimer = WAIT_TIME;
+	//		m_state = STATE::IDLE;
+	//	}
+	//	break;
 
-	case STATE::IDLE:// 待機
-		if (m_waitTimer > 0.0f)
-		{
-			m_waitTimer -= 1.0f;
-		}
-		else
-		{
-			m_state = STATE::PRESSING;
-		}
-		break;
-	}
+	//case STATE::IDLE:// 待機
+	//	if (m_waitTimer > 0.0f)
+	//	{
+	//		m_waitTimer -= 1.0f;
+	//	}
+	//	else
+	//	{
+	//		m_state = STATE::PRESSING;
+	//	}
+	//	break;
+	//}
 
-	// --- 向きに応じて押し出し方向を決定 ---
-	D3DXVECTOR3 forward(1, 0, 0); // デフォルト（X+方向）
-	D3DXMATRIX rotY;
-	D3DXMatrixRotationY(&rotY, GetRot().y); // Y軸回転
-	D3DXVec3TransformNormal(&forward, &forward, &rotY);
-	D3DXVec3Normalize(&forward, &forward);
+	//// --- 向きに応じて押し出し方向を決定 ---
+	//D3DXVECTOR3 forward(1, 0, 0); // デフォルト（X+方向）
+	//D3DXMATRIX rotY;
+	//D3DXMatrixRotationY(&rotY, GetRot().y); // Y軸回転
+	//D3DXVec3TransformNormal(&forward, &forward, &rotY);
+	//D3DXVec3Normalize(&forward, &forward);
 
-	// --- 新しい位置を計算 ---
-	D3DXVECTOR3 newPos = m_initPos + forward * m_offSet;
+	//// --- 新しい位置を計算 ---
+	//D3DXVECTOR3 newPos = m_initPos + forward * m_offSet;
 
-	// 位置の設定
-	SetPos(newPos);
+	//// 位置の設定
+	//SetPos(newPos);
 }
 
 
@@ -443,4 +443,52 @@ void CConveyerBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
+}
+
+
+//=============================================================================
+// 動く床ブロックのコンストラクタ
+//=============================================================================
+CMoveBlock::CMoveBlock()
+{
+	// 値のクリア
+	m_initPos		= INIT_VEC3;// 初期位置
+	m_nMoveCounter	= 0;		// 移動カウンター
+	m_MoveAmplitude = 200.0f;	// ±移動幅
+	m_MovePeriod	= 300.0f;	// 周期フレーム
+}
+//=============================================================================
+// 動く床ブロックのデストラクタ
+//=============================================================================
+CMoveBlock::~CMoveBlock()
+{
+	// なし
+}
+//=============================================================================
+// 動く床ブロックの初期化処理
+//=============================================================================
+HRESULT CMoveBlock::Init(void)
+{
+	// ブロックの初期化処理
+	CBlock::Init();
+
+	// 初期位置の設定
+	m_initPos = GetPos();
+
+	return S_OK;
+}
+//=============================================================================
+// 動く床ブロックの更新処理
+//=============================================================================
+void CMoveBlock::Update(void)
+{
+	// ブロックの更新処理
+	CBlock::Update();
+
+	m_nMoveCounter++;
+
+	float pos = m_MoveAmplitude * sinf((2.0f * D3DX_PI * m_nMoveCounter) / m_MovePeriod);
+
+	// 位置の設定
+	SetPos(D3DXVECTOR3(m_initPos.x + pos, m_initPos.y, m_initPos.z));
 }

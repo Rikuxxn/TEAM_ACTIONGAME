@@ -210,4 +210,23 @@ private:
 
 };
 
+//*****************************************************************************
+// 動く床ブロッククラス
+//*****************************************************************************
+class CMoveBlock : public CBlock
+{
+public:
+	CMoveBlock();
+	~CMoveBlock();
+
+	HRESULT Init(void);
+	void Update(void);
+
+private:
+	D3DXVECTOR3 m_initPos;	// 初期位置
+	int m_nMoveCounter;		// 移動カウンター
+	float m_MoveAmplitude;	// ±移動幅
+	float m_MovePeriod;		// 周期フレーム
+};
+
 #endif
