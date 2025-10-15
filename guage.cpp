@@ -122,14 +122,14 @@ void CGuage::Update(void)
 			m_nHp = m_nMax;
 		}
 
-		if (pKeyboard->GetTrigger(DIK_2) == true)
+		if (pKeyboard->GetTrigger(DIK_SPACE) == true)
 		{
 			m_nHp -= 50;
 		}
 
 		if (pKeyboard->GetPress(DIK_3) == true)
 		{
-			if (m_nHp < m_nMax - 10)
+			if (m_nHp < m_nMax)
 			{
 				m_nHp += 3;
 			}
