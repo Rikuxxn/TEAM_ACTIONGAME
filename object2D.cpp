@@ -283,7 +283,7 @@ void CObject2D::ScrollTexture(void)
 //=============================================================================
 // UI更新処理
 //=============================================================================
-void CObject2D::UpdateUI(float fWidth)
+void CObject2D::UpdateUI(float fWidth, float fHeight)
 {
 	VERTEX_2D* pVtx;// 頂点情報へのポインタ
 
@@ -291,11 +291,12 @@ void CObject2D::UpdateUI(float fWidth)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(m_fWidth, m_fHeight, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_fWidth + (fWidth * 250.0f), m_fHeight, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(m_fWidth, m_fHeight + 13.0f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_fWidth + (fWidth * 250.0f), m_fHeight + 13.0f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x + (fWidth * 300.0f), m_pos.y, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y + fHeight, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_pos.x + (fWidth * 300.0f), m_pos.y + fHeight, 0.0f);
 
+	// 頂点カラーの設定
 	pVtx[0].col = m_col;
 	pVtx[1].col = m_col;
 	pVtx[2].col = m_col;
@@ -307,7 +308,7 @@ void CObject2D::UpdateUI(float fWidth)
 //=============================================================================
 // UIフレーム更新処理
 //=============================================================================
-void CObject2D::UpdateFrame(void)
+void CObject2D::UpdateFrame(float fHeight)
 {
 	VERTEX_2D* pVtx;// 頂点情報へのポインタ
 
@@ -315,15 +316,22 @@ void CObject2D::UpdateFrame(void)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(m_fWidth, m_fHeight, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(m_fWidth + 250.0f, m_fHeight, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(m_fWidth, m_fHeight + 13.0f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(m_fWidth + 250.0f, m_fHeight + 13.0f, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(m_pos.x, m_pos.y, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(m_pos.x + 300.0f, m_pos.y, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(m_pos.x, m_pos.y + fHeight, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(m_pos.x + 300.0f, m_pos.y + fHeight, 0.0f);
 
+	// 頂点カラーの設定
 	pVtx[0].col = m_col;
 	pVtx[1].col = m_col;
 	pVtx[2].col = m_col;
 	pVtx[3].col = m_col;
+
+	// テクスチャ座標の設定
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
