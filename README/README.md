@@ -1,2 +1,9 @@
 # TEAM_ACTIONGAME
-team
+
+操作方法
+
+移動 W,A,S,D
+
+ジャンプ SPACE
+
+ポーズ TAB

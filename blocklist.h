@@ -81,6 +81,7 @@ public:
 	CGearBlock();
 	~CGearBlock();
 
+	HRESULT Init(void);
 	void Update(void);
 
 	// コライダー
@@ -93,8 +94,23 @@ public:
 		return new btCylinderShape(halfExtents);
 	}
 
-private:
+	void SetRotDir(float dir) { m_rotDir = dir; } // 外から方向指定用
+	void SetRotSpeed(float fSpeed) { m_rotSpeed = fSpeed; }
+	void SetAmplitude(float fAmplitude) { m_MoveAmplitude = fAmplitude; }
+	void SetPeriod(float fPeriod) { m_MovePeriod = fPeriod; }
 
+	float GetRotDir(void) const { return m_rotDir; }
+	float GetRotSpeed(void) const { return m_rotSpeed; }
+	float GetAmplitude(void) const { return m_MoveAmplitude; }
+	float GetPeriod(void) const { return m_MovePeriod; }
+
+private:
+	D3DXVECTOR3 m_initPos;	// 初期位置
+	float m_rotDir;			// 回転方向（+1:正回転 / -1:逆回転）
+	float m_rotSpeed;		// 回転スピード
+	int m_nMoveCounter;		// 移動カウンター
+	float m_MoveAmplitude;	// ±移動幅
+	float m_MovePeriod;		// 周期フレーム
 };
 
 //*****************************************************************************

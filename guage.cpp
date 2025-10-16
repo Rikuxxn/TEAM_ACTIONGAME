@@ -73,6 +73,9 @@ HRESULT CGuage::Init(void)
 
 	m_nHp = m_nMax;
 
+	// スコアの生成
+	CScore::Create(620.0f, 50.0f, 80.0f, 100.0f);
+
 	// 2Dオブジェクトの初期化
 	CObject2D::Init();
 
@@ -96,7 +99,7 @@ void CGuage::Update(void)
 	{
 		nCount++;
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();		// キーボードの取得
-		float f, f2, f3, f4;
+		float f, f3, f4;
 		f = (float)m_nHp / (float)m_nMax;
 #if 0
 		f2 = f / 0.1f;
@@ -104,12 +107,24 @@ void CGuage::Update(void)
 #endif
 #if 1
 		int n = f / 0.1f;
+<<<<<<< HEAD
+		if (m_nHp >= m_nMax ||
+			(int)(((float)m_nHp / (float)m_nMax) * 100) <= 0)
+		{
+			f3 = (float)n;
+		}
+		else
+		{
+			f3 = (float)n + 1;
+		}
+=======
 		f3 = (float)n + 1;
 		if (f3 >= 11)
 		{
 			f3 = 10;
 		}
 		//f3 = (float)n;
+>>>>>>> 1f5b249a0bf5e7ff39bb2b87f0e24ba2fe8a6424
 #endif
 		if (m_nHp >= 1)
 		{
@@ -132,17 +147,36 @@ void CGuage::Update(void)
 
 		if (pKeyboard->GetTrigger(DIK_2) == true)
 		{
-			m_nHp -= 50;
+			m_nHp -= (int)((float)m_nMax * 0.1f);
+		}
+
+		if (pKeyboard->GetTrigger(DIK_SPACE) == true)
+		{
+			m_nHp -= (int)((float)m_nMax * 0.03f);
 		}
 
 		if (pKeyboard->GetPress(DIK_3) == true)
 		{
+<<<<<<< HEAD
+			if (m_nHp < m_nMax)
+			{
+				m_nHp += (int)((float)m_nMax * 0.003f);
+			}
+			else if (m_nHp >= m_nMax)
+			{
+				m_nHp = m_nMax;
+			}
+=======
 			m_nHp += 3;
+>>>>>>> 1f5b249a0bf5e7ff39bb2b87f0e24ba2fe8a6424
 		}
 #endif
-		if (m_nHp > 0)
+		else
 		{
-			m_nHp--;
+			if (m_nHp > 0)
+			{
+				m_nHp--;
+			}
 		}
 		else
 		{

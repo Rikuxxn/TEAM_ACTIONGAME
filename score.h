@@ -20,7 +20,7 @@
 class CScore : public CObject
 {
 public:
-	CScore(int nPriority = 7);
+	CScore(int nPriority = 6);
 	~CScore();
 
 	static CScore* Create(float baseX, float baseY, float digitWidth, float digitHeight);
