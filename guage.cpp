@@ -107,7 +107,7 @@ void CGuage::Update(void)
 #endif
 #if 1
 		int n = f / 0.1f;
-<<<<<<< HEAD
+
 		if (m_nHp >= m_nMax ||
 			(int)(((float)m_nHp / (float)m_nMax) * 100) <= 0)
 		{
@@ -117,14 +117,13 @@ void CGuage::Update(void)
 		{
 			f3 = (float)n + 1;
 		}
-=======
+
 		f3 = (float)n + 1;
 		if (f3 >= 11)
 		{
 			f3 = 10;
 		}
 		//f3 = (float)n;
->>>>>>> 1f5b249a0bf5e7ff39bb2b87f0e24ba2fe8a6424
 #endif
 		if (m_nHp >= 1)
 		{
@@ -157,7 +156,6 @@ void CGuage::Update(void)
 
 		if (pKeyboard->GetPress(DIK_3) == true)
 		{
-<<<<<<< HEAD
 			if (m_nHp < m_nMax)
 			{
 				m_nHp += (int)((float)m_nMax * 0.003f);
@@ -166,9 +164,7 @@ void CGuage::Update(void)
 			{
 				m_nHp = m_nMax;
 			}
-=======
 			m_nHp += 3;
->>>>>>> 1f5b249a0bf5e7ff39bb2b87f0e24ba2fe8a6424
 		}
 #endif
 		else
@@ -177,10 +173,6 @@ void CGuage::Update(void)
 			{
 				m_nHp--;
 			}
-		}
-		else
-		{
-			m_nHp = 0;
 		}
 
 		if (m_nHp > m_nMax)
