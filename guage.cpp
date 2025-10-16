@@ -96,7 +96,7 @@ void CGuage::Update(void)
 	{
 		nCount++;
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();		// キーボードの取得
-		float f, f2, f3, f4;
+		float f, f3, f4;
 		f = (float)m_nHp / (float)m_nMax;
 #if 0
 		f2 = f / 0.1f;
@@ -104,8 +104,15 @@ void CGuage::Update(void)
 #endif
 #if 1
 		int n = f / 0.1f;
-		f3 = (float)n + 1;
-		//f3 = (float)n;
+		if (m_nHp >= m_nMax ||
+			(int)(((float)m_nHp / (float)m_nMax) * 100) <= 0)
+		{
+			f3 = (float)n;
+		}
+		else
+		{
+			f3 = (float)n + 1;
+		}
 #endif
 		if (m_nHp >= 1)
 		{
@@ -122,22 +129,34 @@ void CGuage::Update(void)
 			m_nHp = m_nMax;
 		}
 
+		if (pKeyboard->GetTrigger(DIK_2) == true)
+		{
+			m_nHp -= (int)((float)m_nMax * 0.1f);
+		}
+
 		if (pKeyboard->GetTrigger(DIK_SPACE) == true)
 		{
-			m_nHp -= 50;
+			m_nHp -= (int)((float)m_nMax * 0.03f);
 		}
 
 		if (pKeyboard->GetPress(DIK_3) == true)
 		{
 			if (m_nHp < m_nMax)
 			{
-				m_nHp += 3;
+				m_nHp += (int)((float)m_nMax * 0.003f);
+			}
+			else if (m_nHp >= m_nMax)
+			{
+				m_nHp = m_nMax;
 			}
 		}
 #endif
-		if (m_nHp > 0)
+		else
 		{
-			m_nHp--;
+			if (m_nHp > 0)
+			{
+				m_nHp--;
+			}
 		}
 
 		// のこりHP30%以上
