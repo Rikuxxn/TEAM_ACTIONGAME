@@ -58,5 +58,10 @@
     "type": 11,
     "filepath": "data/MODELS/move_floor.x",
     "GUItexFilepath": "data/TEXTURE/move_floor.png"
+  },
+  {
+    "type": 12,
+    "filepath": "data/MODELS/charge_zone.x",
+    "GUItexFilepath": "data/TEXTURE/charge_zone.png"
   }
 ]

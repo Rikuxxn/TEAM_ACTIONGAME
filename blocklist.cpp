@@ -247,38 +247,38 @@ void CGearBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
-	D3DXVECTOR3 playerPos = CGame::GetPlayer()->GetPos();
-	D3DXVECTOR3 disPos = playerPos - GetPos();
-	float distance = D3DXVec3Length(&disPos);
-	const float kTriggerDistance = 1080.0f; // 反応距離
+	//D3DXVECTOR3 playerPos = CGame::GetPlayer()->GetPos();
+	//D3DXVECTOR3 disPos = playerPos - GetPos();
+	//float distance = D3DXVec3Length(&disPos);
+	//const float kTriggerDistance = 1080.0f; // 反応距離
 
-	if (distance < kTriggerDistance)
-	{
-		// 回転
-		D3DXVECTOR3 rot = GetRot();
+	//if (distance < kTriggerDistance)
+	//{
+	//	// 回転
+	//	D3DXVECTOR3 rot = GetRot();
 
-		rot.y += m_rotSpeed * m_rotDir;// 回転スピード * 回転方向
+	//	rot.y += m_rotSpeed * m_rotDir;// 回転スピード * 回転方向
 
-		// 正規化
-		if (rot.y > D3DX_PI)
-		{
-			rot.y -= D3DX_PI * 2.0f;
-		}
-		else if (rot.y <= -D3DX_PI)
-		{
-			rot.y += D3DX_PI * 2.0f;
-		}
+	//	// 正規化
+	//	if (rot.y > D3DX_PI)
+	//	{
+	//		rot.y -= D3DX_PI * 2.0f;
+	//	}
+	//	else if (rot.y <= -D3DX_PI)
+	//	{
+	//		rot.y += D3DX_PI * 2.0f;
+	//	}
 
-		// 向きの設定
-		SetRot(rot);
-	}
+	//	// 向きの設定
+	//	SetRot(rot);
+	//}
 
-	m_nMoveCounter++;
+	//m_nMoveCounter++;
 
-	float pos = m_MoveAmplitude * cosf((2.0f * D3DX_PI * m_nMoveCounter) / m_MovePeriod);
+	//float pos = m_MoveAmplitude * cosf((2.0f * D3DX_PI * m_nMoveCounter) / m_MovePeriod);
 
-	// 位置の設定
-	SetPos(D3DXVECTOR3(m_initPos.x, m_initPos.y + pos, m_initPos.z));
+	//// 位置の設定
+	//SetPos(D3DXVECTOR3(m_initPos.x, m_initPos.y + pos, m_initPos.z));
 }
 
 
@@ -346,53 +346,53 @@ void CPressBlock::Update(void)
 	// ブロックの更新処理
 	CBlock::Update();
 
-	//switch (m_state)
-	//{
-	//case STATE::PRESSING:// 押し出し
-	//	m_offSet += PRESS_SPEED;
+	switch (m_state)
+	{
+	case STATE::PRESSING:// 押し出し
+		m_offSet += PRESS_SPEED;
 
-	//	if (m_offSet >= PRESS_DISTANCE)
-	//	{
-	//		m_offSet = PRESS_DISTANCE;
-	//		m_state = STATE::RETRACTING;
-	//	}
-	//	break;
+		if (m_offSet >= PRESS_DISTANCE)
+		{
+			m_offSet = PRESS_DISTANCE;
+			m_state = STATE::RETRACTING;
+		}
+		break;
 
-	//case STATE::RETRACTING:// 戻り
-	//	m_offSet -= BACK_SPEED;
+	case STATE::RETRACTING:// 戻り
+		m_offSet -= BACK_SPEED;
 
-	//	if (m_offSet <= 0.0f)
-	//	{
-	//		m_offSet = 0.0f;
-	//		m_waitTimer = WAIT_TIME;
-	//		m_state = STATE::IDLE;
-	//	}
-	//	break;
+		if (m_offSet <= 0.0f)
+		{
+			m_offSet = 0.0f;
+			m_waitTimer = WAIT_TIME;
+			m_state = STATE::IDLE;
+		}
+		break;
 
-	//case STATE::IDLE:// 待機
-	//	if (m_waitTimer > 0.0f)
-	//	{
-	//		m_waitTimer -= 1.0f;
-	//	}
-	//	else
-	//	{
-	//		m_state = STATE::PRESSING;
-	//	}
-	//	break;
-	//}
+	case STATE::IDLE:// 待機
+		if (m_waitTimer > 0.0f)
+		{
+			m_waitTimer -= 1.0f;
+		}
+		else
+		{
+			m_state = STATE::PRESSING;
+		}
+		break;
+	}
 
-	//// --- 向きに応じて押し出し方向を決定 ---
-	//D3DXVECTOR3 forward(1, 0, 0); // デフォルト（X+方向）
-	//D3DXMATRIX rotY;
-	//D3DXMatrixRotationY(&rotY, GetRot().y); // Y軸回転
-	//D3DXVec3TransformNormal(&forward, &forward, &rotY);
-	//D3DXVec3Normalize(&forward, &forward);
+	// --- 向きに応じて押し出し方向を決定 ---
+	D3DXVECTOR3 forward(1, 0, 0); // デフォルト（X+方向）
+	D3DXMATRIX rotY;
+	D3DXMatrixRotationY(&rotY, GetRot().y); // Y軸回転
+	D3DXVec3TransformNormal(&forward, &forward, &rotY);
+	D3DXVec3Normalize(&forward, &forward);
 
-	//// --- 新しい位置を計算 ---
-	//D3DXVECTOR3 newPos = m_initPos + forward * m_offSet;
+	// --- 新しい位置を計算 ---
+	D3DXVECTOR3 newPos = m_initPos + forward * m_offSet;
 
-	//// 位置の設定
-	//SetPos(newPos);
+	// 位置の設定
+	SetPos(newPos);
 }
 
 
@@ -479,7 +479,7 @@ CMoveBlock::CMoveBlock()
 	// 値のクリア
 	m_initPos		= INIT_VEC3;// 初期位置
 	m_nMoveCounter	= 0;		// 移動カウンター
-	m_MoveAmplitude = 200.0f;	// ±移動幅
+	m_MoveAmplitude = 100.0f;	// ±移動幅
 	m_MovePeriod	= 300.0f;	// 周期フレーム
 }
 //=============================================================================

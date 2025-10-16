@@ -448,13 +448,11 @@ void CBlockManager::UpdateTransform(CBlock* selectedBlock)
 		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
 
 		//*********************************************************************
-		// ギアブロック専用設定
+		// ギア・動く床の設定
 		//*********************************************************************
 		if (auto gear = dynamic_cast<CGearBlock*>(selectedBlock))
 		{
 			ImGui::Dummy(ImVec2(0.0f, 10.0f));
-			ImGui::Separator();
-			ImGui::Text("Gear Settings");
 
 			float rotateDir = gear->GetRotDir();
 

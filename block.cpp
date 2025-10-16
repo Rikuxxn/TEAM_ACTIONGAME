@@ -96,6 +96,7 @@ void CBlock::InitFactory(void)
 	m_BlockFactoryMap[CBlock::TYPE_PROPELLER_WING]	= []() -> CBlock* { return new CPropellerWingBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_BELTCONVEYER]	= []() -> CBlock* { return new CConveyerBlock(); };
 	m_BlockFactoryMap[CBlock::TYPE_MOVE_FLOOR]		= []() -> CBlock* { return new CMoveBlock(); };
+	m_BlockFactoryMap[CBlock::TYPE_CHARGE_ZONE]		= []() -> CBlock* { return new CChargeBlock(); };
 }
 //=============================================================================
 // ‰Šú‰»ˆ—
