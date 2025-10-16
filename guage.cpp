@@ -140,56 +140,6 @@ void CGuage::Update(void)
 			f4 = 0.0f;
 		}
 
-<<<<<<< HEAD
-=======
-#if _DEBUG
-		if (pKeyboard->GetTrigger(DIK_1) == true)
-		{
-			m_nHp = m_nMax;
-		}
-
-		if (pKeyboard->GetTrigger(DIK_2) == true)
-		{
-			m_nHp -= (int)((float)m_nMax * 0.1f);
-		}
-
-		if (pKeyboard->GetTrigger(DIK_SPACE) == true)
-		{
-			m_nHp -= (int)((float)m_nMax * 0.03f);
-		}
-
-		if (pKeyboard->GetPress(DIK_3) == true)
-		{
-			if (m_nHp < m_nMax)
-			{
-				m_nHp += (int)((float)m_nMax * 0.003f);
-			}
-			else if (m_nHp >= m_nMax)
-			{
-				m_nHp = m_nMax;
-			}
-			m_nHp += 3;
-		}
-#endif
-		if (m_nHp > m_nMax)
-		{
-			m_nHp = m_nMax;
-		}
-		else if (m_nHp <= 0)
-		{
-			m_nHp = 0;
-		}
-		else
-		{
-			m_nHp--;
-		}
-
-		if (m_nHp > m_nMax)
-		{
-			m_nHp = m_nMax;
-		}
-
->>>>>>> ed4854df160f1deee3a2b20915f4b3150aa1c01d
 		// ‚Ì‚±‚èHP30%ˆÈã
 		if (nHp >= (int)(nMax * 0.3f))
 		{
