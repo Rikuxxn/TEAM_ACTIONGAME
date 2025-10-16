@@ -493,7 +493,7 @@ void CBlockManager::UpdateTransform(CBlock* selectedBlock)
 			float Period = gear->GetPeriod();
 			ImGui::Text("Period:");
 			ImGui::SameLine();
-			ImGui::DragFloat("##GearPeriod", &Period, 1.0f, 0.0f, 300.0f, "%.1f");
+			ImGui::DragFloat("##GearPeriod", &Period, 1.0f, 0.0f, 400.0f, "%.1f");
 
 			// 回転スピードの設定
 			gear->SetRotSpeed(speed);
@@ -502,7 +502,7 @@ void CBlockManager::UpdateTransform(CBlock* selectedBlock)
 			gear->SetAmplitude(Amplitude);
 
 			// 周期の設定
-			gear->SetPeriod(Amplitude);
+			gear->SetPeriod(Period);
 		}
 
 		//*********************************************************************
