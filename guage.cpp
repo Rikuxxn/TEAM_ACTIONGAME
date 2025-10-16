@@ -167,12 +167,17 @@ void CGuage::Update(void)
 			m_nHp += 3;
 		}
 #endif
+		if (m_nHp > m_nMax)
+		{
+			m_nHp = m_nMax;
+		}
+		else if (m_nHp <= 0)
+		{
+			m_nHp = 0;
+		}
 		else
 		{
-			if (m_nHp > 0)
-			{
-				m_nHp--;
-			}
+			m_nHp--;
 		}
 
 		if (m_nHp > m_nMax)
