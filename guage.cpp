@@ -11,6 +11,7 @@
 #include "guage.h"
 #include "manager.h"
 #include "score.h"
+#include "player.h"
 
 //*****************************************************************************
 // 静的メンバ変数宣言
@@ -25,8 +26,7 @@ CGuage::CGuage()
 	// 値のクリア
 	m_nIdxTexture = 0;
 	m_type = TYPE_NONE;	// ゲージの種類
-	m_nHp = NULL;
-	m_nFrame = NULL;
+	//nHp = NULL;
 }
 //=============================================================================
 // デストラクタ
@@ -71,7 +71,7 @@ HRESULT CGuage::Init(void)
 		m_nIdxTexture = CManager::GetTexture()->RegisterDynamic("data/TEXTURE/BatteryFrame.png");
 	}
 
-	m_nHp = m_nMax;
+	//nHp = nMax;
 
 	// スコアの生成
 	CScore::Create(620.0f, 50.0f, 80.0f, 100.0f);
@@ -95,12 +95,14 @@ void CGuage::Uninit(void)
 void CGuage::Update(void)
 {
 	static int nCount = 0;
+	int nHp = CPlayer::GetHP();
+	int nMax = CPlayer::GetMax();
 	if (m_type == TYPE_GUAGE)
 	{
 		nCount++;
 		CInputKeyboard* pKeyboard = CManager::GetInputKeyboard();		// キーボードの取得
 		float f, f3, f4;
-		f = (float)m_nHp / (float)m_nMax;
+		f = (float)nHp / (float)nMax;
 #if 0
 		f2 = f / 0.1f;
 		f3 = f2;
@@ -108,8 +110,8 @@ void CGuage::Update(void)
 #if 1
 		int n = f / 0.1f;
 
-		if (m_nHp >= m_nMax ||
-			(int)(((float)m_nHp / (float)m_nMax) * 100) <= 0)
+		if (nHp >= nMax ||
+			(int)(((float)nHp / (float)nMax) * 100) <= 0)
 		{
 			f3 = (float)n;
 		}
@@ -125,11 +127,11 @@ void CGuage::Update(void)
 		}
 		//f3 = (float)n;
 #endif
-		if (m_nHp >= 1)
+		if (nHp >= 1)
 		{
 			f4 = f3 / 10;
 		}
-		else if(m_nHp > m_nMax)
+		else if(nHp > nMax)
 		{
 			f4 = 1.0f;
 		}
@@ -138,6 +140,8 @@ void CGuage::Update(void)
 			f4 = 0.0f;
 		}
 
+<<<<<<< HEAD
+=======
 #if _DEBUG
 		if (pKeyboard->GetTrigger(DIK_1) == true)
 		{
@@ -185,8 +189,9 @@ void CGuage::Update(void)
 			m_nHp = m_nMax;
 		}
 
+>>>>>>> ed4854df160f1deee3a2b20915f4b3150aa1c01d
 		// のこりHP30%以上
-		if (m_nHp >= (int)(m_nMax * 0.3f))
+		if (nHp >= (int)(nMax * 0.3f))
 		{
 			SetCol(D3DCOLOR_RGBA(0, 255, 0, 255));
 		}
@@ -196,17 +201,18 @@ void CGuage::Update(void)
 			SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));
 		}
 
-		CScore::SetScore((int)(((float)m_nHp / (float)m_nMax) * 100));
+		CScore::SetScore((int)(((float)nHp / (float)nMax) * 100));
 
 		//// のこりHP20%以上
-		//if (m_nHp >= (int)(m_nMax * 0.2f))
+		//if (nHp >= (int)(nMax * 0.2f))
 		//{
-		//	float Col = 200.0f * ((float)m_nHp / (float)m_nMax);
+		//	float Col = 200.0f * ((float)nHp / (float)nMax);
 		//	SetCol(D3DCOLOR_RGBA(255 - (int)Col, (int)Col + 55, 0, 255));
 		//}
 		//// それ以外
 		//else
 		//{
+		//	// HPの点滅
 		//	if (nCount % 2 == 0)
 		//	{
 		//		SetCol(D3DCOLOR_RGBA(255, 0, 0, 255));

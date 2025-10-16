@@ -97,6 +97,8 @@ public:
 	InputData GatherInput(void);
 	D3DXVECTOR3 GetNearestRespawnPoint(void) const;
 	CBlock* FindFrontBlockByRaycast(float rayLength);
+	static int GetHP(void) { return m_nHp; }
+	static int GetMax(void) { return m_nMax; }
 
 	void ReleasePhysics(void);														// Physics破棄用
 	void RespawnToCheckpoint(void);
@@ -141,6 +143,9 @@ private:
 	static constexpr int DASH_PARTICLE_INTERVAL = 10; // パーティクル発生間隔（フレーム数）
 	btTypedConstraint* m_pFloorConstraint;
 	CBlock* m_pGroundBlock;      // 乗っている床
+	static constexpr int m_nMax = 5000;	// 最大値
+	static int m_nHp;					// HP
+	bool m_bRepair;						// 回復しているかどうか
 
 	// ステートを管理するクラスのインスタンス
 	StateMachine<CPlayer> m_stateMachine;

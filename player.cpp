@@ -15,6 +15,11 @@
 #include "game.h"
 #include "guage.h"
 
+//*****************************************************************************
+// 静的メンバ変数宣言
+//*****************************************************************************
+int CPlayer::m_nHp = 0;
+
 // 名前空間stdの使用
 using namespace std;
 
@@ -53,7 +58,8 @@ CPlayer::CPlayer(int nPriority) : CObject(nPriority)
 	m_pFloorConstraint	= nullptr;						// 固定ジョイント
 	m_pGroundBlock		= nullptr;						// 乗っている床
 	memset(m_apModel, 0, sizeof(m_apModel));			// モデル(パーツ)へのポインタ
-
+	m_nHp = 0;											// 体力(HP)
+	m_bRepair = false;
 }
 //=============================================================================
 // デストラクタ
@@ -161,6 +167,9 @@ HRESULT CPlayer::Init(void)
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayer_StandState>();
 
+	// 体力の設定
+	m_nHp = m_nMax;
+
 	// ゲージを生成
 	CGuage::Create(D3DXVECTOR3(700.0f, 130.0f, 0.0f), CGuage::TYPE_GUAGE);
 	CGuage::Create(D3DXVECTOR3(700.0f, 130.0f, 0.0f), CGuage::TYPE_FRAME);
@@ -204,6 +213,8 @@ void CPlayer::Update(void)
 	// カメラの角度の取得
 	D3DXVECTOR3 CamRot = pCamera->GetRot();
 
+	static int nCount = 0;
+
 	// --- 接地判定 ---
 	if (!m_isJumping)
 	{
@@ -215,6 +226,11 @@ void CPlayer::Update(void)
 
 	// 入力判定の取得
 	InputData input = GatherInput();
+
+	if (input.jump == true && !m_isJumping && m_bOnGround)
+	{
+		m_nHp -= (int)((float)m_nMax * 0.03f);
+	}
 
 	// 向きの正規化
 	if (m_rotDest.y - m_rot.y > D3DX_PI)
@@ -343,6 +359,22 @@ void CPlayer::Update(void)
 	}
 
 	int nNumModels = 10;
+
+	nCount++;
+	if (m_nHp > 0 && nCount >= 90)
+	{
+		// 回復していない時のみHPを減らす
+		if (m_bRepair == false)
+		{
+			//m_nHp -= (int)((float)m_nMax * 0.01f);
+		}
+		nCount = 0;
+	}
+
+	if (m_nHp > m_nMax)
+	{
+		m_nHp = m_nMax;
+	}
 
 	// モーションの更新処理
 	m_pMotion->Update(m_apModel, nNumModels);
@@ -712,7 +744,35 @@ InputData CPlayer::GatherInput(void)
 	{
 		input.moveDir += D3DXVECTOR3(-cosf(CamRot.y), 0, sinf(CamRot.y));
 	}
+#if _DEBUG
+	if (pKeyboard->GetTrigger(DIK_1) == true)
+	{
+		m_nHp = m_nMax;
+	}
 
+	if (pKeyboard->GetTrigger(DIK_2) == true)
+	{
+		m_nHp -= (int)((float)m_nMax * 0.05f);
+	}
+
+	if (pKeyboard->GetPress(DIK_3) == true)
+	{
+		if (m_nHp < m_nMax)
+		{
+			m_nHp += (int)((float)m_nMax * 0.0015f);
+		}
+		else if (m_nHp >= m_nMax)
+		{
+			m_nHp = m_nMax;
+		}
+		m_bRepair = true;
+		m_nHp += 3;
+	}
+	else if (pKeyboard->GetRelease(DIK_3) == true)
+	{
+		m_bRepair = false;
+	}
+#endif
 	// 正規化
 	if (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f)
 	{
