@@ -375,6 +375,10 @@ void CPlayer::Update(void)
 	{
 		m_nHp = m_nMax;
 	}
+	else if (m_nHp <= 0)
+	{
+		m_nHp = 0;
+	}
 
 	// モーションの更新処理
 	m_pMotion->Update(m_apModel, nNumModels);
