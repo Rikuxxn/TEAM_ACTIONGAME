@@ -212,6 +212,12 @@ void CSeesawBlock::SetHinge(void)
 CGearBlock::CGearBlock()
 {
 	// 値のクリア
+	m_initPos		= INIT_VEC3;
+	m_rotDir		= 1;	// 回転方向（+1:正回転 / -1:逆回転）
+	m_rotSpeed		= 0.05f;// 回転スピード
+	m_nMoveCounter	= 0;		// 移動カウンター
+	m_MoveAmplitude = 100.0f;	// ±移動幅
+	m_MovePeriod	= 400.0f;	// 周期フレーム
 }
 //=============================================================================
 // ギアブロックのデストラクタ
@@ -219,6 +225,19 @@ CGearBlock::CGearBlock()
 CGearBlock::~CGearBlock()
 {
 	// 無し
+}
+//=============================================================================
+// ギアブロックの初期化処理
+//=============================================================================
+HRESULT CGearBlock::Init(void)
+{
+	// ブロックの初期化処理
+	CBlock::Init();
+
+	// 初期位置の設定
+	m_initPos = GetPos();
+
+	return S_OK;
 }
 //=============================================================================
 // ギアブロックの更新処理
@@ -231,14 +250,14 @@ void CGearBlock::Update(void)
 	D3DXVECTOR3 playerPos = CGame::GetPlayer()->GetPos();
 	D3DXVECTOR3 disPos = playerPos - GetPos();
 	float distance = D3DXVec3Length(&disPos);
-	const float kTriggerDistance = 580.0f; // 反応距離
+	const float kTriggerDistance = 1080.0f; // 反応距離
 
 	if (distance < kTriggerDistance)
 	{
 		// 回転
 		D3DXVECTOR3 rot = GetRot();
 
-		rot.y += 0.05f;// 回転スピード
+		rot.y += m_rotSpeed * m_rotDir;// 回転スピード * 回転方向
 
 		// 正規化
 		if (rot.y > D3DX_PI)
@@ -254,6 +273,12 @@ void CGearBlock::Update(void)
 		SetRot(rot);
 	}
 
+	m_nMoveCounter++;
+
+	float pos = m_MoveAmplitude * cosf((2.0f * D3DX_PI * m_nMoveCounter) / m_MovePeriod);
+
+	// 位置の設定
+	SetPos(D3DXVECTOR3(m_initPos.x, m_initPos.y + pos, m_initPos.z));
 }
 
 

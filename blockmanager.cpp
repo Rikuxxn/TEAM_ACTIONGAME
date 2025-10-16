@@ -445,6 +445,66 @@ void CBlockManager::UpdateTransform(CBlock* selectedBlock)
 		// サイズ変更チェック
 		bool isSizeChanged = (size != prevSize);
 
+		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
+
+		//*********************************************************************
+		// ギアブロック専用設定
+		//*********************************************************************
+		if (auto gear = dynamic_cast<CGearBlock*>(selectedBlock))
+		{
+			ImGui::Dummy(ImVec2(0.0f, 10.0f));
+			ImGui::Separator();
+			ImGui::Text("Gear Settings");
+
+			float rotateDir = gear->GetRotDir();
+
+			// ラジオボタン形式（どちらか一方だけ選択）
+			ImGui::Text("Rotate Direction:");
+
+			ImGui::SameLine();
+
+			if (ImGui::RadioButton("+", rotateDir > 0.0f))
+			{
+				rotateDir = 1.0f;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::RadioButton("-", rotateDir < 0.0f))
+			{
+				rotateDir = -1.0f;
+			}
+
+			gear->SetRotDir(rotateDir);
+
+			// スピード調整
+			float speed = gear->GetRotSpeed();
+			ImGui::Text("Rot Speed:");
+			ImGui::SameLine();
+			ImGui::DragFloat("##GearRotateSpeed", &speed, 0.01f, 0.0f, 1.0f, "%.2f");
+
+			// 移動幅調整
+			float Amplitude = gear->GetAmplitude();
+			ImGui::Text("Amplitude:");
+			ImGui::SameLine();
+			ImGui::DragFloat("##GearAmplitude", &Amplitude, 1.0f, 0.0f, 300.0f, "%.1f");
+
+			// 周期調整
+			float Period = gear->GetPeriod();
+			ImGui::Text("Period:");
+			ImGui::SameLine();
+			ImGui::DragFloat("##GearPeriod", &Period, 1.0f, 0.0f, 300.0f, "%.1f");
+
+			// 回転スピードの設定
+			gear->SetRotSpeed(speed);
+
+			// 移動幅の設定
+			gear->SetAmplitude(Amplitude);
+
+			// 周期の設定
+			gear->SetPeriod(Amplitude);
+		}
+
 		//*********************************************************************
 		// 質量 の調整
 		//*********************************************************************
@@ -768,6 +828,19 @@ void CBlockManager::SaveToJson(const char* filename)
 			block->GetColliderSize().z
 		};
 
+		// ギア専用データを保存
+		if (block->GetType() == CBlock::TYPE_GEAR_BODY)
+		{
+			CGearBlock* gear = dynamic_cast<CGearBlock*>(block);
+			if (gear)
+			{
+				b["rotation_speed"] = gear->GetRotSpeed();  // 回転速度
+				b["rotation_dir"] = gear->GetRotDir();      // 回転方向
+				b["amplitude"] = gear->GetAmplitude();		// 移動幅
+				b["period"] = gear->GetPeriod();			// 周期
+			}
+		}
+
 		// 追加
 		j.push_back(b);
 	}
@@ -847,6 +920,31 @@ void CBlockManager::LoadFromJson(const char* filename)
 
 			block->SetColliderSize(colliderSize);
 			block->UpdateCollider(); // 単一用再生成
+		}
+
+		// ギア専用パラメータを復元
+		if (type == CBlock::TYPE_GEAR_BODY)
+		{
+			CGearBlock* gear = dynamic_cast<CGearBlock*>(block);
+			if (gear)
+			{
+				if (b.contains("rotation_speed"))
+				{
+					gear->SetRotSpeed(b["rotation_speed"]);
+				}
+				if (b.contains("rotation_dir"))
+				{
+					gear->SetRotDir(b["rotation_dir"]);
+				}
+				if (b.contains("amplitude"))
+				{
+					gear->SetAmplitude(b["amplitude"]);
+				}
+				if (b.contains("period"))
+				{
+					gear->SetPeriod(b["period"]);
+				}
+			}
 		}
 	}
 }
