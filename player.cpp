@@ -218,7 +218,7 @@ void CPlayer::Update(void)
 	// --- 接地判定 ---
 	if (!m_isJumping)
 	{
-		m_bOnGround = OnGround(CManager::GetPhysicsWorld(), m_pRigidBody, 55.0f);
+		m_bOnGround = OnGround(CManager::GetPhysicsWorld(), m_pRigidBody);
 	}
 
 	// ステートマシン更新
@@ -434,13 +434,13 @@ void CPlayer::Draw(void)
 //=============================================================================
 // レイによる接触判定
 //=============================================================================
-bool CPlayer::OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody, float rayLength)
+bool CPlayer::OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody)
 {
 	btTransform trans;
 	playerBody->getMotionState()->getWorldTransform(trans);
 
-	btVector3 start = trans.getOrigin();
-	btVector3 end = start - btVector3(0, rayLength, 0);
+	btVector3 start(m_pos.x, m_pos.y + 10.0f, m_pos.z);
+	btVector3 end(m_pos.x, m_pos.y - 5.0f, m_pos.z);
 
 	struct RayResultCallback : public btCollisionWorld::ClosestRayResultCallback
 	{

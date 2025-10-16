@@ -69,7 +69,7 @@ public:
 	//*****************************************************************************
 	// flagmentä÷êî
 	//*****************************************************************************
-	bool OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody, float rayLength);
+	bool OnGround(btDiscreteDynamicsWorld* world, btRigidBody* playerBody);
 
 	//*****************************************************************************
 	// setterä÷êî
