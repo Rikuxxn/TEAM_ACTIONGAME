@@ -73,6 +73,9 @@ HRESULT CGuage::Init(void)
 
 	m_nHp = m_nMax;
 
+	// スコアの生成
+	CScore::Create(620.0f, 50.0f, 80.0f, 100.0f);
+
 	// 2Dオブジェクトの初期化
 	CObject2D::Init();
 
